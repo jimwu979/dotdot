@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "target": "ESNext"
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+}

@@ -18,12 +18,12 @@ export default createRouter({
     {
       path: '/desktop/:year(\\d{4})/:month(0[1-9]|1[0-2])',
       name: 'index',
-      component: () => import('../desktop/index.vue'),
+      component: () => import('@/desktop/pages/index.vue'),
     },
     {
       path: '/desktop/login',
       name: 'login',
-      component: () => import('../desktop/login.vue'),
+      component: () => import('@/desktop/pages/login.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
