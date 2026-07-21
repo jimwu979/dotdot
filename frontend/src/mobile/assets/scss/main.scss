@@ -1,0 +1,23 @@
+@use '@/shared/assets/scss/main.scss';
+
+html {
+  touch-action: manipulation;
+}
+
+body {
+  margin: 0;
+  background-color: $yellow;
+}
+
+.page{
+  width: 100%;
+  overflow: hidden;
+  min-height: 100dvh;
+  background-color: $background;
+  padding-bottom: $header_height;
+}
+.container {
+  width: 1280px;
+  margin: 0 auto;
+  max-width: 100%;
+}

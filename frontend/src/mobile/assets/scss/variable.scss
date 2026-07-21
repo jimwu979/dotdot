@@ -1,0 +1,23 @@
+// header height
+$header_height: 90px;
+
+// font style
+@mixin h1 () {
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: 2px;
+}
+@mixin h2 () {
+  line-height: 1;
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+@mixin h3 () {
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+@mixin p () {
+  font-size: 14px;
+  line-height: 1.6;
+}

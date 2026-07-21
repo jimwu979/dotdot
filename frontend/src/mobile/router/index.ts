@@ -18,27 +18,32 @@ export default createRouter({
     {
       path: '/mobile/:year(\\d{4})/:month(0[1-9]|1[0-2])',
       name: 'index',
-      component: () => import('../mobile/index.vue'),
+      component: () => import('@/mobile/pages/index.vue'),
     },
     {
       path: '/mobile/login',
       name: 'login',
-      component: () => import('../mobile/login.vue'),
+      component: () => import('@/mobile/pages/login.vue'),
     },
     {
       path: '/mobile/register',
       name: 'register',
-      component: () => import('../mobile/register.vue'),
+      component: () => import('@/mobile/pages/register.vue'),
     },
     {
       path: '/mobile/statistics',
       name: 'statistics',
-      component: () => import('../mobile/statistics.vue'),
+      component: () => import('@/mobile/pages/statistics.vue'),
     },
     {
       path: '/mobile/settings',
       name: 'settings',
-      component: () => import('../mobile/settings.vue'),
+      component: () => import('@/mobile/pages/settings.vue'),
+    },
+    {
+      path: '/mobile/savings',
+      name: 'savings',
+      component: () => import('@/mobile/pages/savings.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

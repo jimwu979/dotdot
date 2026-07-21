@@ -1,15 +1,15 @@
 <template>
-  <main class="page index">
+  <div class="page index">
     <h1>INDEX</h1>
     <p>年:{{ year }}, 月:{{ month }}</p>
     <AppHeader />
-  </main>
+  </div>
 </template>
 
 <script lang="ts" setup>
   import { computed } from 'vue'
   import { useRoute } from 'vue-router'
-  import AppHeader from '../components/mobile/appHeader.vue'
+  import AppHeader from '@/mobile/components/AppHeader.vue'
 
   const route = useRoute()
   const year  = computed(() => route.params.year )
