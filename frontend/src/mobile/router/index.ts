@@ -31,6 +31,21 @@ export default createRouter({
       component: () => import('@/mobile/pages/register.vue'),
     },
     {
+      path: '/mobile/register-complete',
+      name: 'register-complete',
+      component: () => import('@/mobile/pages/register-complete.vue'),
+    },
+    {
+      path: '/mobile/forgot-password',
+      name: 'forgot-password',
+      component: () => import('@/mobile/pages/forgot-password.vue'),
+    },
+    {
+      path: '/mobile/reset-password',
+      name: 'reset-password',
+      component: () => import('@/mobile/pages/reset-password.vue'),
+    },
+    {
       path: '/mobile/statistics',
       name: 'statistics',
       component: () => import('@/mobile/pages/statistics.vue'),
