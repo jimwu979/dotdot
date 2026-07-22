@@ -235,7 +235,7 @@
           z-index: -1;
         }
         &.current{
-          font-weight: 700;
+          font-weight: 600;
           text-decoration: underline;
           text-underline-offset: 4px;
         }
