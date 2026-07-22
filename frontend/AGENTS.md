@@ -26,3 +26,19 @@
   - 變數、mixin、文字樣式請優先參考 `variable.scss`。
   - 使用到 `display: flex`、`align-items`、`flex-direction`、`justify-content` 任一屬性時，請一律改用 `@include flexbox()`。
     
+# git規則
+  - commit subject 
+    - 撰寫格式為: [`主要更動範圍`] `修改內容`
+    - 主要更動範圍若為頁面時，就寫該檔名，但不用附加附檔名
+      譬如 `[login] build new page`
+      內容可以是: 添加該檔案，且將該頁面添加至路由中
+      此時更動的檔案雖然還包括路由檔案，但是更動項目主要是login這一頁，所以就寫這一頁即可，不需要把所有更動的檔案都寫上去
+    - 若更動頁面不只一頁，則以 `, ` 加入多個頁面
+      譬如 `[index, login] build new page`
+    - 如果內容是main.scss, variable.scss, vite.config.js等設定相關的檔案，則連同附檔名一起寫進去
+    - 要用英文撰寫
+  - commit body 
+    - 盡量以條列式方式撰寫，但非強制性規則
+    - 以中文撰寫
+  - 使用者要求你commit時，先不要直接做，先回答使用者要如何commit、分成幾個commit等等，讓使用者確認後，使用者同意才能進行commit
+  - commit跟push的動作一起做，push不需要使用者確認，commit完畢即可直接push
