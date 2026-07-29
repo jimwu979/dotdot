@@ -25,7 +25,11 @@
     若使用 `include xxx()` 時等mixin時，也要依照整行總長度排序，且 `include` 這段字的長度可視為屬性名稱的長度。
   - 變數、mixin、文字樣式請優先參考 `variable.scss`。
   - 使用到 `display: flex`、`align-items`、`flex-direction`、`justify-content` 任一屬性時，請一律改用 `@include flexbox()`。
-    
+  - SCSS 開發時不要寫任何多餘的空格，只有整行都是註解時，才能在上方一排加上空格
+  - 此專案沒有RWD，手機版跟電腦版都分別只有一個尺寸的版本，所以不要寫任何@media
+  - 此專案不需要支援無障礙，所以不要添加任何 aria-hidden 等無障礙用途的東西
+  - 開發vue檔時，不要在 `<script>` 中使用數字以外的文字，文字應保留在html中
+
 # git規則
   - commit subject 
     - 撰寫格式為: [`主要更動範圍`] `修改內容`
