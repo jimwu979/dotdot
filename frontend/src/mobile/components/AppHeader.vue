@@ -5,8 +5,8 @@
       <PrevPage v-if="false" />
     </section>
     <section class="center">
-      <MonthSelector v-if="false" />
-      <Title v-if="true" />
+      <MonthSelector v-if="true" />
+      <Title v-if="false" />
     </section>
     <section class="right">
       <slot name="right" />

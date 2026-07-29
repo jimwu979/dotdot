@@ -11,10 +11,10 @@
       <button type="button" @click="changeMonth(1)" />
     </div>
 
-    <div class="selector" :class="{'isOpen': isOpen}">
+    <div class="selector" :class="{'isOpen': isOpen}" @click="isOpen = false">
 
       <!-- options -->
-      <div class="options">
+      <div class="options" @click.stop>
         <button type="button" class="now" @click="goToNow">NOW</button>
         <div class="year">
           <button type="button" class="prev" @click="browseYear--" />
@@ -128,11 +128,11 @@
       }
       &:nth-of-type(odd){
         &:before{
-          width: 16px;
+          width: 12px;
           content: '';
           aspect-ratio: 16/9;
           display: inline-block;
-          background-image: url('/arrow_line_black.png');
+          background-image: url('/arrow_fill_black.png');
         }
       }
       &:nth-of-type(1){
@@ -143,6 +143,7 @@
       }
       &:nth-of-type(2){
         @include h2();
+        font-weight: 600;
       }
       &:nth-of-type(3){
         padding-left: 18px;
@@ -153,29 +154,38 @@
     }
   }
   >.selector{
-    left: 12px;
+    left: 0;
     opacity: 0;
+    height: auto;
+    width: 100dvw;
     position: fixed;
     transition: .2s;
-    border-radius: 6px;
     pointer-events: none;
-    background-color: $yellow;
-    width: calc(100dvw - 24px);
-    transform: translateY(10px);
-    bottom: calc($header_height + 12px);
-    overflow: hidden;
+    border: 1px solid $oat;
+    bottom: $header_height;
+    background-color: $white;
     @include flexbox(column, flex-start, stretch);
+    &:before{
+      left: -1px;
+      content: '';
+      z-index: -2;
+      bottom: 100%;
+      width: 100dvw;
+      height: 100dvh;
+      position: absolute;
+      display: inline-block;
+      background-color: rgba(0,0,0,.6);
+    }
     >.options{
-      padding: 12px;
+      padding: 20px 12px;
       position: relative;
-      background-color: $yellow;
       @include flexbox(row, center, center);
       >button.now{
         left: 12px;
-        padding: 2px 12px;
+        padding: 4px 16px;
         position: absolute;
         border-radius: 8px;
-        background-color: rgba(255,255,255,.4);
+        background-color: #EEE;
       }
       >.year{
         @include flexbox(row, center, center);
@@ -211,7 +221,7 @@
     }
     >.list{
       flex-wrap: wrap;
-      padding-top: 12px;
+      padding: 0 0 12px;
       @include flexbox(row, space-around, flex-start);
       >a{
         aspect-ratio: 1/1;
@@ -223,28 +233,41 @@
           left: 6px;
           opacity: 0;
           content: '';
+          z-index: -1;
           position: absolute;
           border-radius: 50%;
           display: inline-block;
           width: calc(100% - 12px);
           height: calc(100% - 12px);
-          background-color: rgba(255,255,255,.4);
+          background-color: $yellow;
         }
-        &.now:before{
-          opacity: 1;
-          z-index: -1;
+        &:after{
+          opacity: 0;
+          width: 14px;
+          height: 2px;
+          content: '';
+          bottom: 20px;
+          transition: .2s;
+          position: absolute;
+          border-radius: 99px;
+          display: inline-block;
+          left: calc(50% - 7px);
+          background-color: $black;
         }
-        &.current{
+        &.now{
           font-weight: 600;
-          text-decoration: underline;
-          text-underline-offset: 4px;
+          &:before{
+            opacity: 1;
+          }
+        }
+        &.current:after{
+          opacity: 1;
         }
       }
     }
     &.isOpen{
       opacity: 1;
       pointer-events: auto;
-      transform: translateY(0);
     }
   }
 }
