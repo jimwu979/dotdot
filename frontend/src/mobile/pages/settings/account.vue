@@ -1,0 +1,15 @@
+<template>
+  <main class="page account">
+    <AppHeader />
+  </main>
+</template>
+
+<script lang="ts" setup>
+import AppHeader from '@/mobile/components/AppHeader.vue'
+</script>
+
+<style lang="scss" scoped>
+.page.account {
+
+}
+</style>

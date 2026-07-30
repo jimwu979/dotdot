@@ -1,4 +1,49 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
+const settingPageModules = import.meta.glob('../pages/settings/**/*.vue')
+
+const settingRoutes: RouteRecordRaw[] = Object.entries(settingPageModules)
+  .map(([filePath, component]) => {
+    const segments = filePath
+      .replace('../pages/settings/', '')
+      .replace(/\.vue$/, '')
+      .split('/')
+
+    if (segments.at(-1) === 'index') {
+      segments.pop()
+    }
+
+    const routeSegments = segments.map((segment) => {
+      const catchAllParam = segment.match(/^\[\.\.\.(.+)\]$/)
+      const dynamicParam = segment.match(/^\[(.+)\]$/)
+
+      if (catchAllParam) {
+        return `:${catchAllParam[1]}(.*)*`
+      }
+
+      if (dynamicParam) {
+        return `:${dynamicParam[1]}`
+      }
+
+      return segment
+    })
+    const suffix = routeSegments.length > 0 ? `/${routeSegments.join('/')}` : ''
+    const nameSuffix = segments
+      .map((segment) => segment.replace(/^\[\.\.\.(.+)\]$/, '$1').replace(/^\[(.+)\]$/, '$1'))
+      .join('-')
+
+    return {
+      path: `/mobile/settings${suffix}`,
+      name: nameSuffix ? `settings-${nameSuffix}` : 'settings',
+      component,
+    }
+  })
+  .sort((routeA, routeB) => {
+    const dynamicCountA = (routeA.path.match(/:/g) ?? []).length
+    const dynamicCountB = (routeB.path.match(/:/g) ?? []).length
+
+    return dynamicCountA - dynamicCountB || routeA.path.localeCompare(routeB.path)
+  })
 
 const getCurrentMonthPath = () => {
   const date = new Date()
@@ -50,11 +95,7 @@ export default createRouter({
       name: 'statistics',
       component: () => import('@/mobile/pages/statistics.vue'),
     },
-    {
-      path: '/mobile/settings',
-      name: 'settings',
-      component: () => import('@/mobile/pages/settings/index.vue'),
-    },
+    ...settingRoutes,
     {
       path: '/mobile/savings',
       name: 'savings',
