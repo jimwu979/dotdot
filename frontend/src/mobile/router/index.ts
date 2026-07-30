@@ -53,7 +53,7 @@ export default createRouter({
     {
       path: '/mobile/settings',
       name: 'settings',
-      component: () => import('@/mobile/pages/settings.vue'),
+      component: () => import('@/mobile/pages/settings/index.vue'),
     },
     {
       path: '/mobile/savings',
