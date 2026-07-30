@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, type Ref, computed } from 'vue'
+  import { ref, type Ref } from 'vue'
   import Transaction from '@/mobile/components/transaction.vue'
   const isExpense: Ref<boolean> = ref(true)
   // const selectorIsOpen: Ref<boolean> = ref(true)
