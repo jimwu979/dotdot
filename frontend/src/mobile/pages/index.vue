@@ -142,7 +142,7 @@
 
 <style lang="scss" scoped>
 .page.index {
-  padding: 28px 12px 260px;
+  padding-bottom: 260px;
   background: radial-gradient(circle at 25% 4%, rgba(249, 219, 97, .2), transparent 28%),  $background;
   > p {
     color: $grey;
