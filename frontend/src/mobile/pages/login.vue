@@ -188,6 +188,7 @@ const submit = async () => {
     @include flexbox(column, flex-start, stretch);
     box-shadow: 0 18px 50px rgba(73, 62, 28, .08);
     > .api-error {
+      opacity: 0;
       color: $red;
       line-height: 18px;
       text-align: center;
