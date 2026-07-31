@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import categoryIcons from '@/shared/icons/category'
 
@@ -14,6 +15,7 @@ if (isMobile) {
 }
 
 createApp(App)
+  .use(createPinia())
   .use(categoryIcons)
   .use(routerModule.default)
   .mount('#app')
