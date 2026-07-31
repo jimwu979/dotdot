@@ -5,6 +5,7 @@
         {
           title: '帳號',
           route: 'account',
+          queryKey: 'view',
           link: [
             { label: '姓名', query: 'name' },
             { label: 'Email', query: 'email' },
@@ -14,6 +15,7 @@
         {
           title: '週期',
           route: 'cycle',
+          queryKey: 'view',
           link: [
             { label: '點點記帳', query: 'dotdot' },
             { label: '自動記帳', query: 'automatic' },
@@ -22,9 +24,10 @@
         {
           title: '類別',
           route: 'type',
+          queryKey: 'isExpense',
           link: [
-            { label: '收入', query: 'income' },
-            { label: '支出', query: 'expense' },
+            { label: '收入', query: 'false' },
+            { label: '支出', query: 'true' },
           ]
         },
       ]" :key="index"
@@ -34,7 +37,10 @@
         <router-link
           v-for="(n, n_index) in i.link"
           :key="n_index"
-          :to="`/mobile/settings/${i.route}?view=${n.query}`"
+          :to="{
+            path: `/mobile/settings/${i.route}`,
+            query: { [i.queryKey]: n.query },
+          }"
         >
           <h3>{{ n.label }}</h3>
           <img src="/arrow_line_black.png">
