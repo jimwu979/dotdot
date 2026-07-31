@@ -12,10 +12,9 @@ body {
 .page{
   width: 100%;
   overflow: hidden;
-  padding: 28px 12px;
   min-height: 100dvh;
   background-color: $background;
-  padding-bottom: $header_height;
+  padding: 28px 12px calc($header_height + 28px);
 }
 .container {
   width: 1280px;
