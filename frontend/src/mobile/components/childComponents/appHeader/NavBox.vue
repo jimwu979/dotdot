@@ -54,7 +54,7 @@
     left: 0;
     gap: 12px;
     opacity: 0;
-    width: 160px;
+    width: 220px;
     padding: 12px;
     transition: .2s;
     position: absolute;
