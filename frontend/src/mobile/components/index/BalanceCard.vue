@@ -112,8 +112,8 @@
   border-radius: 24px;
   border: 1px solid $black;
   background-color: $black;
-  box-shadow: 0 18px 35px rgba(42, 36, 24, .16);
   transition: background-color .2s, border-color .2s;
+  box-shadow: 0 18px 35px rgba($color: $black, $alpha: .3);
   > .balance-heading {
     @include flexbox(row, space-between, flex-start);
     > div {
