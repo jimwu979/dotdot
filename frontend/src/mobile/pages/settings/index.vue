@@ -23,7 +23,7 @@
         },
         {
           title: '類別',
-          route: 'type',
+          route: 'category',
           queryKey: 'isExpense',
           link: [
             { label: '收入', query: 'false' },

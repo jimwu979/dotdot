@@ -1,5 +1,5 @@
 <template>
-  <main class="page type">
+  <main class="page category">
     <Breadcrumb
       :items="[
         { url: '/mobile/settings', text: '設定' },
@@ -31,11 +31,11 @@
           :class="{ 'drag-placeholder': draggedCategoryId === i.id }"
           :data-category-id="i.id"
         >
-          <div :style="{ backgroundColor: i.color }">
+          <div :style="{ backgroundColor: categoryColors[i.color] }">
             <component :is="i.icon" />
           </div>
           <h6>{{ i.name }}</h6>
-          <router-link class="btn edit" to="">
+          <router-link class="btn edit" to="/mobile/settings/category-editor">
             <Pencil />
           </router-link>
           <button
@@ -57,7 +57,7 @@
           ]"
           :style="dragPreviewStyle"
         >
-          <div :style="{ backgroundColor: dragPreviewCategory.color }">
+          <div :style="{ backgroundColor: categoryColors[dragPreviewCategory.color] }">
             <component :is="dragPreviewCategory.icon" />
           </div>
           <h6>{{ dragPreviewCategory.name }}</h6>
@@ -69,7 +69,12 @@
           </span>
         </div>
       </Teleport>
-      <button>添加新類別</button>
+      <router-link
+        class="add-category"
+        to="/mobile/settings/category-editor"
+      >
+        添加新類別
+      </router-link>
     </main>
     <AppHeader />
   </main>
@@ -86,6 +91,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { GripVertical, Pencil } from '@lucide/vue'
 import AppHeader from '@/mobile/components/AppHeader.vue'
 import Breadcrumb from '@/mobile/components/Breadcrumb.vue'
+import { categoryColors } from '@/shared/colors/category'
 import { useCategoryStore, type Category } from '@/shared/stores/category'
 
 const route = useRoute()
@@ -253,7 +259,7 @@ const startCategoryDrag = (event: PointerEvent, categoryId: number) => {
 </script>
 
 <style lang="scss" scoped>
-.page.type {
+.page.category {
   @include flexbox(column, flex-start, stretch);
   >main{
     margin-top: 24px;
@@ -305,6 +311,7 @@ const startCategoryDrag = (event: PointerEvent, categoryId: number) => {
           @include flexbox(row, center, center);
           >svg{
             width: 18px;
+            stroke: $white;
           }
         }
         >h6{
@@ -326,12 +333,13 @@ const startCategoryDrag = (event: PointerEvent, categoryId: number) => {
         }
       }
     }
-    >button{
+    >.add-category{
       height: 52px;
       @include h3();
       margin-top: 12px;
       border-radius: 8px;
       background-color: $yellow;
+      @include flexbox(row, center, center);
     }
   }
 }
@@ -359,6 +367,7 @@ const startCategoryDrag = (event: PointerEvent, categoryId: number) => {
     @include flexbox(row, center, center);
     >svg{
       width: 18px;
+      stroke: $white;
     }
   }
   >h6{
