@@ -74,7 +74,7 @@
   import Transaction from '@/mobile/components/transaction.vue'
   const isExpense: Ref<boolean> = ref(true)
   // const selectorIsOpen: Ref<boolean> = ref(true)
-  const selectorType: Ref<string> = ref('dotdot') // category || dotdot
+  const selectorType: Ref<string> = ref('') // 'category' || 'dotdot' || ''
   const categoryList = [
     {
       icon: '',
