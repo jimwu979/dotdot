@@ -147,8 +147,20 @@
 
 <style lang="scss" scoped>
 .page.index {
+  z-index: 1;
+  position: relative;
   padding-bottom: 260px;
-  background: radial-gradient(circle at 25% 4%, rgba(249, 219, 97, .2), transparent 28%),  $background;
+  &:before{
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+    content: '';
+    height: 100dvh;
+    position: fixed;
+    display: inline-block;
+    background: radial-gradient(circle at 25% 4%, rgba(249, 219, 97, .2), transparent 28%),  $background;
+  }
   > p {
     color: $grey;
     font-size: 13px;
