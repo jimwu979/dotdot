@@ -3,7 +3,10 @@
 
     <!-- icon -->
     <div class="icon" :style="{'background-color': color}" >
-      <img :src="icon" alt="">
+      <component
+        v-if="iconComponent"
+        :is="iconComponent"
+      />
     </div>
 
     <!-- 類別名稱 -->
@@ -24,7 +27,13 @@
 </template>
 
 <script lang="ts" setup>
-  defineProps<{
+  import { computed } from 'vue'
+  import {
+    categoryIcons,
+    type CategoryIconName,
+  } from '@/shared/icons/category'
+
+  const props = defineProps<{
     icon: string
     color: string
     category: string
@@ -33,6 +42,12 @@
     note: string
     amount: number
   }>()
+
+  const iconComponent = computed(() => {
+    if (!(props.icon in categoryIcons)) return undefined
+
+    return categoryIcons[props.icon as CategoryIconName]
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -44,8 +59,10 @@
     width: 32px;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    > img {
-
+    @include flexbox(row, center, center);
+    > svg {
+      width: 18px;
+      stroke: $white;
     }
   }
   > h6 {

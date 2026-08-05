@@ -20,116 +20,121 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue'
+  import { useRoute } from 'vue-router'
   import AppHeader    from '@/mobile/components/AppHeader.vue'
   import BalanceCard  from '@/mobile/components/index/BalanceCard.vue'
   import FixedBtnBox  from '@/mobile/components/index/FixedBtnBox.vue'
   import Records      from '@/mobile/components/index/Records.vue'
+  import { categoryColors } from '@/shared/colors/category'
+  import type { CategoryIconName } from '@/shared/icons/category'
+  import { useCategoryStore } from '@/shared/stores/category'
+  import { useRecordStore } from '@/shared/stores/record'
+
+  interface HomeRecordItem {
+    id: number
+    occurredAt: string
+    icon: CategoryIconName
+    color: string
+    category: string
+    isExpense: boolean
+    tag: string[]
+    note: string
+    amount: number
+  }
+
+  interface DailyRecords {
+    date: string
+    month: number
+    day: number
+    week: string
+    total: number
+    record: HomeRecordItem[]
+  }
 
   const currentDate = new Date()
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth() + 1
   const date = currentDate.getDate()
+  const weekList = ['週日', '週一', '週二', '週三', '週四', '週五', '週六']
+  const route = useRoute()
+  const categoryStore = useCategoryStore()
+  const recordStore = useRecordStore()
+  const getRouteNumber = (value: unknown, fallback: number, min: number, max: number) => {
+    const rawValue = Array.isArray(value) ? value[0] : value
+    const numberValue = Number(rawValue)
 
-  const list = [
-    {
-      day: 24,
-      week: '週三',
-      record: [
-        {
-          icon: '',
-          color: '#fff3bd',
-          category: '正餐',
-          isExpense: true,
-          tag: [],
-          note: '',
-          amount: 0,
-        },
-      ]
-    },
-    {
-      day: 23,
-      week: '週四',
-      record: [
-        {
-          icon: '',
-          color: '#e9f4ef',
-          category: '其他',
-          isExpense: true,
-          tag: [],
-          note: '拖把',
-          amount: 0,
-        },
-        {
-          icon: '',
-          color: '#e9f4ef',
-          category: '酒',
-          isExpense: true,
-          tag: ['酒精飲料'],
-          note: '',
-          amount: 52,
-        },
-        {
-          icon: '',
-          color: '#e9f4ef',
-          category: '豆漿',
-          isExpense: true,
-          tag: ['健康', '健身'],
-          note: '一整罐',
-          amount: 50,
-        },
-        {
-          icon: '',
-          color: '#e9f4ef',
-          category: '正餐',
-          isExpense: true,
-          tag: [],
-          note: '',
-          amount: 0,
-        },
-      ]
-    },
-    {
-      day: 22,
-      week: '週五',
-      record: [
-        {
-          icon: '',
-          color: '#f3edff',
-          category: '正餐',
-          isExpense: true,
-          tag: [],
-          note: '',
-          amount: 99,
-        },
-      ]
-    },
-    {
-      day: 1,
-      week: '週三',
-      record: [
-        {
-          icon: '',
-          color: '#f3eEEf',
-          category: '生活費',
-          isExpense: false,
-          tag: [],
-          note: '',
-          amount: 20000,
-        },
-        {
-          icon: '',
-          color: '#f3eEEf',
-          category: '其他',
-          isExpense: true,
-          tag: ['訂閱'],
-          note: 'Netflix, AWS, Spotify',
-          amount: 598,
-        },
-      ]
-    },
-  ]
+    return Number.isInteger(numberValue) && numberValue >= min && numberValue <= max
+      ? numberValue
+      : fallback
+  }
+  const selectedYear = computed(() => (
+    getRouteNumber(route.params.year, year, 1000, 9999)
+  ))
+  const selectedMonth = computed(() => (
+    getRouteNumber(route.params.month, month, 1, 12)
+  ))
 
-  const records = computed(() => list.flatMap(item => item.record))
+  const records = computed<HomeRecordItem[]>(() => {
+    return recordStore.getRecordsByMonth(selectedYear.value, selectedMonth.value)
+      .reduce<HomeRecordItem[]>((items, record) => {
+        const category = categoryStore.categoryList
+          .find(category => category.id === record.categoryId)
+
+        if (!category) return items
+
+        const tag = category.tags
+          .filter(tag => record.tagIds.includes(tag.id))
+          .sort((a, b) => a.index - b.index)
+          .map(tag => tag.name)
+
+        items.push({
+          id: record.id,
+          occurredAt: record.occurredAt,
+          icon: category.icon,
+          color: categoryColors[category.color],
+          category: category.name,
+          isExpense: category.isExpense,
+          tag,
+          note: record.note,
+          amount: record.amount,
+        })
+
+        return items
+      }, [])
+  })
+
+  const list = computed<DailyRecords[]>(() => {
+    const recordMap = new Map<string, HomeRecordItem[]>()
+
+    records.value.forEach(record => {
+      const dailyRecords = recordMap.get(record.occurredAt) ?? []
+
+      dailyRecords.push(record)
+      recordMap.set(record.occurredAt, dailyRecords)
+    })
+
+    return Array.from(recordMap.entries())
+      .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
+      .map(([occurredAt, dailyRecords]) => {
+        const [recordYear, recordMonth, recordDate] = occurredAt
+          .split('-')
+          .map(Number)
+        const recordDay = new Date(recordYear, recordMonth - 1, recordDate).getDay()
+        const total = dailyRecords.reduce((sum, record) => (
+          sum + (record.isExpense ? -record.amount : record.amount)
+        ), 0)
+
+        return {
+          date: occurredAt,
+          month: recordMonth,
+          day: recordDate,
+          week: weekList[recordDay],
+          total,
+          record: dailyRecords,
+        }
+      })
+  })
+
   const totalIncome = computed(() => records.value
     .filter(item => !item.isExpense)
     .reduce((total, item) => total + item.amount, 0)

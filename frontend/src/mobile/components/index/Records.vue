@@ -1,13 +1,13 @@
 <template>
   <section class="records">
-    <article v-for="(i, index) in list" :key="index">
+    <article v-for="i in list" :key="i.date">
       <div class="date">
-        <strong>7/{{ i.day }}</strong>
+        <strong>{{ i.month }}/{{ i.day }}</strong>
         <span>{{ i.week }}</span>
-        <b>總計: {{ +2000 }}</b>
+        <b>總計: {{ i.total > 0 ? '+' : '' }}{{ i.total }}</b>
       </div>
       <div class="list">
-        <router-link v-for="(n, n_index) in i.record" :key="n_index" :to="''">
+        <router-link v-for="n in i.record" :key="n.id" :to="''">
           <transaction
             :icon="n.icon"
             :color="n.color"
@@ -25,9 +25,11 @@
 
 <script lang="ts" setup>
   import Transaction from '@/mobile/components/transaction.vue'
+  import type { CategoryIconName } from '@/shared/icons/category'
 
   interface RecordItem {
-    icon: string
+    id: number
+    icon: CategoryIconName | ''
     color: string
     category: string
     isExpense: boolean
@@ -37,8 +39,11 @@
   }
 
   interface DailyRecords {
+    date: string
+    month: number
     day: number
     week: string
+    total: number
     record: RecordItem[]
   }
 
