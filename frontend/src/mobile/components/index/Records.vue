@@ -7,7 +7,14 @@
         <b>總計: {{ i.total > 0 ? '+' : '' }}{{ i.total }}</b>
       </div>
       <div class="list">
-        <router-link v-for="n in i.record" :key="n.id" :to="''">
+        <router-link
+          v-for="n in i.record"
+          :key="n.id"
+          :to="{
+            path: '/mobile/record',
+            query: { recordId: n.id },
+          }"
+        >
           <transaction
             :icon="n.icon"
             :color="n.color"

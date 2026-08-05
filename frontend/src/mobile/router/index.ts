@@ -95,6 +95,11 @@ export default createRouter({
       name: 'statistics',
       component: () => import('@/mobile/pages/statistics.vue'),
     },
+    {
+      path: '/mobile/record',
+      name: 'record',
+      component: () => import('@/mobile/pages/record.vue'),
+    },
     ...settingRoutes,
     {
       path: '/mobile/savings',

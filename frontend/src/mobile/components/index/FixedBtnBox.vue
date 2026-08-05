@@ -12,14 +12,16 @@
         <li :class="{'now': isExpense}" @click="isExpense = true">支出</li>
       </ul>
       <div>
-        <template v-for="(i, index) in categoryList">
+        <template v-for="i in categoryList" :key="i.id">
           <router-link
             v-if="i.isExpense === isExpense"
-            :key="index"
-            :to="`${i.id}`"
+            :to="{
+              path: '/mobile/record',
+              query: { categoryID: i.id },
+            }"
           >
-            <div :style="{'background-color': i.color}">
-              <!-- <img src="" alt=""> -->
+            <div :style="{'background-color': categoryColors[i.color]}">
+              <component :is="categoryIcons[i.icon]" />
             </div>
             <b>{{ i.name }}</b>
           </router-link>
@@ -70,62 +72,21 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, type Ref } from 'vue'
+  import { computed, ref, type Ref } from 'vue'
   import Transaction from '@/mobile/components/transaction.vue'
+  import { categoryColors } from '@/shared/colors/category'
+  import { categoryIcons } from '@/shared/icons/category'
+  import { useCategoryStore } from '@/shared/stores/category'
+
+  const categoryStore = useCategoryStore()
   const isExpense: Ref<boolean> = ref(true)
   // const selectorIsOpen: Ref<boolean> = ref(true)
   const selectorType: Ref<string> = ref('') // 'category' || 'dotdot' || ''
-  const categoryList = [
-    {
-      icon: '',
-      color: '#FFF3BD',
-      name: '電話費',
-      id: 0,
-      isExpense: true,
-    },
-    {
-      icon: '',
-      color: '#DDEFD8',
-      name: '水電費',
-      id: 0,
-      isExpense: true,
-    },
-    {
-      icon: '',
-      color: '#DCEBFA',
-      name: '正餐',
-      id: 0,
-      isExpense: true,
-    },
-    {
-      icon: '',
-      color: '#E8DDF5',
-      name: '飲料',
-      id: 0,
-      isExpense: true,
-    },
-    {
-      icon: '',
-      color: '#F9DCCF',
-      name: '其他',
-      id: 0,
-      isExpense: true,
-    },
-    {
-      icon: '',
-      color: '#F6D6DF',
-      name: '生活費',
-      id: 0,
-      isExpense: false,
-    },
-    {
-      icon: '',
-      color: '#D7EFEA',
-      name: '發票中獎',
-      id: 0,
-      isExpense: false,
-    },
-  ]
+  const categoryList = computed(() => (
+    categoryStore.categoryList
+      .slice()
+      .sort((categoryA, categoryB) => categoryA.index - categoryB.index)
+  ))
   const dotdotList = [
     {
       fixed: true,
@@ -344,6 +305,11 @@
             width: 46px;
             aspect-ratio: 1/1;
             border-radius: 50%;
+            @include flexbox(row, center, center);
+            >svg{
+              width: 32px;
+              stroke: $white;
+            }
           }
           >b{
           }
