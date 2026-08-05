@@ -68,27 +68,27 @@ export default createRouter({
     {
       path: '/mobile/login',
       name: 'login',
-      component: () => import('@/mobile/pages/login.vue'),
+      component: () => import('@/mobile/pages/login/index.vue'),
     },
     {
       path: '/mobile/register',
       name: 'register',
-      component: () => import('@/mobile/pages/register.vue'),
+      component: () => import('@/mobile/pages/login/register.vue'),
     },
     {
       path: '/mobile/register-complete',
       name: 'register-complete',
-      component: () => import('@/mobile/pages/register-complete.vue'),
+      component: () => import('@/mobile/pages/login/register-complete.vue'),
     },
     {
       path: '/mobile/forgot-password',
       name: 'forgot-password',
-      component: () => import('@/mobile/pages/forgot-password.vue'),
+      component: () => import('@/mobile/pages/login/forgot-password.vue'),
     },
     {
       path: '/mobile/reset-password',
       name: 'reset-password',
-      component: () => import('@/mobile/pages/reset-password.vue'),
+      component: () => import('@/mobile/pages/login/reset-password.vue'),
     },
     {
       path: '/mobile/statistics',
