@@ -10,6 +10,8 @@ export interface RecordItem {
   occurredAt: string
 }
 
+export type RecordData = Omit<RecordItem, 'id'>
+
 type RecordSeed = Pick<RecordItem, 'categoryId' | 'amount' | 'occurredAt'> & {
   tagIds?: number[]
   note?: string
@@ -241,8 +243,36 @@ export const useRecordStore = defineStore('record', () => {
     return recordList.value.filter(record => record.occurredAt.startsWith(monthKey))
   }
 
+  const addRecord = (recordData: RecordData) => {
+    const record: RecordItem = {
+      ...recordData,
+      id: Math.max(0, ...recordList.value.map(record => record.id)) + 1,
+      tagIds: [...recordData.tagIds],
+    }
+
+    recordList.value.push(record)
+
+    return record
+  }
+
+  const updateRecord = (recordId: number, recordData: RecordData) => {
+    const record = recordList.value.find(record => record.id === recordId)
+
+    if (!record) return false
+
+    record.categoryId = recordData.categoryId
+    record.tagIds = [...recordData.tagIds]
+    record.note = recordData.note
+    record.amount = recordData.amount
+    record.occurredAt = recordData.occurredAt
+
+    return true
+  }
+
   return {
     recordList,
     getRecordsByMonth,
+    addRecord,
+    updateRecord,
   }
 })
