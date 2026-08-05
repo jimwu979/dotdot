@@ -13,7 +13,15 @@
       <section>
         <label class="require">名稱</label>
         <div class="input">
-          <input type="text">
+          <input
+            v-model="categoryData.name"
+            type="text"
+          >
+          <p
+            v-if="nameError"
+            class="error-message"
+            v-text="nameError"
+          />
         </div>
       </section>
 
@@ -21,32 +29,59 @@
       <section>
         <label class="require">類別</label>
         <div class="radio">
-          <button class="selected">收入</button>
-          <button>支出</button>
+          <button
+            type="button"
+            :class="{ selected: categoryData.isExpense === false }"
+            @click="categoryData.isExpense = false"
+          >
+            收入
+          </button>
+          <button
+            type="button"
+            :class="{ selected: categoryData.isExpense === true }"
+            @click="categoryData.isExpense = true"
+          >
+            支出
+          </button>
         </div>
       </section>
 
       <!-- 圖示 -->
       <section>
         <label class="require">圖示</label>
-        <IconEditor />
+        <IconEditor
+          v-model:icon="categoryData.icon"
+          v-model:color-id="categoryData.color"
+        />
       </section>
 
       <!-- 標籤 -->
       <section>
         <label>標籤</label>
         <div class="tag">
-          <TagEditor />
+          <TagEditor
+            v-model:tags="categoryData.tags"
+            :next-tag-id="nextTagId"
+          />
         </div>
       </section>
 
       <!-- 按鈕 -->
       <div>
         <div class="btn-box">
-          <btn text="取消" type="cancel" />
-          <btn text="儲存" type="confirm" />
+          <btn
+            text="取消"
+            type="cancel"
+            @click="isCancelConfirmOpen = true"
+          />
+          <btn
+            text="儲存"
+            type="confirm"
+            @click="saveCategory"
+          />
         </div>
         <button
+          v-if="categoryId !== null"
           type="button"
           @click="isDeleteConfirmOpen = true"
         >
@@ -57,6 +92,21 @@
 
     </main>
     <AppHeader />
+    <ConfirmDialog
+      :open="isCancelConfirmOpen"
+      message="確定要取消編輯嗎？尚未儲存的變更將會遺失。"
+      confirm-text="確定取消"
+      @cancel="isCancelConfirmOpen = false"
+      @confirm="cancelEdit"
+    />
+    <ConfirmDialog
+      :open="isNameErrorDialogOpen"
+      message="類別名稱為必填欄位"
+      confirm-text="知道了"
+      :show-cancel="false"
+      @cancel="isNameErrorDialogOpen = false"
+      @confirm="isNameErrorDialogOpen = false"
+    />
     <ConfirmDialog
       :open="isDeleteConfirmOpen"
       message="確定要刪除此類別嗎？"
@@ -69,7 +119,8 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { computed, reactive, ref, watch } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
   import { Trash } from '@lucide/vue'
   import AppHeader from '@/mobile/components/AppHeader.vue'
   import Breadcrumb from '@/mobile/components/Breadcrumb.vue'
@@ -77,11 +128,135 @@
   import btn from '@/mobile/components/btn.vue'
   import IconEditor from '@/mobile/components/settings/type-edit/IconEditor.vue'
   import TagEditor from '@/mobile/components/settings/type-edit/TagEditor.vue'
+  import {
+    categoryColorList,
+    type CategoryColorId,
+  } from '@/shared/colors/category'
+  import {
+    categoryIconList,
+    type CategoryIconName,
+  } from '@/shared/icons/category'
+  import {
+    useCategoryStore,
+    type CategoryData,
+    type Tag,
+  } from '@/shared/stores/category'
 
+  interface CategoryEditorData {
+    name: string
+    isExpense: boolean | null
+    icon: CategoryIconName | null
+    color: CategoryColorId | null
+    tags: Tag[]
+  }
+
+  const route = useRoute()
+  const router = useRouter()
+  const categoryStore = useCategoryStore()
+  const categoryId = ref<number | null>(null)
+  const nameError = ref('')
+  const isCancelConfirmOpen = ref(false)
+  const isNameErrorDialogOpen = ref(false)
   const isDeleteConfirmOpen = ref(false)
+  const categoryData = reactive<CategoryEditorData>({
+    name: '',
+    isExpense: null,
+    icon: null,
+    color: null,
+    tags: [],
+  })
+
+  const nextTagId = computed(() => {
+    const tagIds = categoryStore.categoryList
+      .flatMap(category => category.tags.map(tag => tag.id))
+
+    return Math.max(0, ...tagIds, ...categoryData.tags.map(tag => tag.id)) + 1
+  })
+
+  const resetCategoryData = () => {
+    categoryId.value = null
+    nameError.value = ''
+    isCancelConfirmOpen.value = false
+    isNameErrorDialogOpen.value = false
+    isDeleteConfirmOpen.value = false
+    categoryData.name = ''
+    categoryData.isExpense = route.query.isExpense !== 'false'
+    categoryData.icon = categoryIconList[0]
+    categoryData.color = categoryColorList[0]
+    categoryData.tags = []
+  }
+
+  const loadCategoryData = () => {
+    resetCategoryData()
+
+    const queryId = Array.isArray(route.query.id)
+      ? route.query.id[0]
+      : route.query.id
+
+    if (typeof queryId !== 'string' || !queryId) return
+
+    const id = Number(queryId)
+
+    if (!Number.isInteger(id)) return
+
+    const category = categoryStore.categoryList.find(category => category.id === id)
+
+    if (!category) return
+
+    categoryId.value = category.id
+    categoryData.name = category.name
+    categoryData.isExpense = category.isExpense
+    categoryData.icon = category.icon
+    categoryData.color = category.color
+    categoryData.tags = category.tags.map(tag => ({ ...tag }))
+  }
+
+  watch(() => route.query.id, loadCategoryData, { immediate: true })
+
+  const cancelEdit = () => {
+    isCancelConfirmOpen.value = false
+    router.back()
+  }
+
+  const saveCategory = () => {
+    nameError.value = categoryData.name.trim()
+      ? ''
+      : '類別名稱為必填欄位'
+
+    if (nameError.value) {
+      isNameErrorDialogOpen.value = true
+      return
+    }
+
+    const isExpense = categoryData.isExpense
+    const icon = categoryData.icon
+    const color = categoryData.color
+
+    if (isExpense === null || icon === null || color === null) return
+
+    const nextCategoryData: CategoryData = {
+      name: categoryData.name.trim(),
+      isExpense,
+      icon,
+      color,
+      tags: categoryData.tags.map(tag => ({ ...tag })),
+    }
+
+    if (categoryId.value === null) {
+      categoryStore.addCategory(nextCategoryData)
+    } else {
+      categoryStore.updateCategory(categoryId.value, nextCategoryData)
+    }
+
+    router.back()
+  }
 
   const confirmDeleteCategory = () => {
     isDeleteConfirmOpen.value = false
+
+    if (categoryId.value === null) return
+
+    if (categoryStore.deleteCategory(categoryId.value)) router.back()
   }
 </script>
 
@@ -117,6 +292,11 @@
               border-radius: 8px;
               border: 1px solid $stone;
               background-color: $white;
+            }
+            >.error-message{
+              color: $red;
+              margin-top: 4px;
+              @include p();
             }
           }
           &.radio{

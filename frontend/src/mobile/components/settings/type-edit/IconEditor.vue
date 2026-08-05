@@ -4,9 +4,9 @@
     <!-- 示意 -->
     <div
       class="img"
-      :style="{backgroundColor: categoryColors[selectColorId]}"
+      :style="{backgroundColor: selectedColor}"
     >
-      <component :is="categoryIcons[selectIcon]" />
+      <component :is="selectedIcon" />
     </div>
 
     <!-- 選擇 icon -->
@@ -16,7 +16,7 @@
         type="button"
         @click="isIconSelectorOpen = true"
       >
-        <component :is="categoryIcons[selectIcon]" />
+        <component :is="selectedIcon" />
       </button>
     </div>
 
@@ -27,7 +27,7 @@
         type="button"
         @click="isColorSelectorOpen = true"
       >
-        <b :style="{backgroundColor: categoryColors[selectColorId]}" />
+        <b :style="{backgroundColor: selectedColor}" />
       </button>
     </div>
   </div>
@@ -41,7 +41,7 @@
       <li
         v-for="i in categoryIconList"
         :key="i"
-        :class="{'select': i === selectIcon}"
+        :class="{'select': i === icon}"
         @click="selectCategoryIcon(i)"
       >
         <component :is="categoryIcons[i]" />
@@ -59,7 +59,7 @@
       <li
         v-for="colorId in categoryColorList"
         :key="colorId"
-        :class="{'select': colorId === selectColorId}"
+        :class="{'select': colorId === colorIdValue}"
         :style="{backgroundColor: categoryColors[colorId]}"
         @click="selectCategoryColor(colorId)"
       >
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Check } from '@lucide/vue'
 import Lightbox from '@/mobile/components/Lightbox.vue'
 import {
@@ -86,18 +86,34 @@ import {
   type CategoryIconName,
 } from '@/shared/icons/category'
 
-const selectIcon = ref<CategoryIconName>('Phone')
-const selectColorId = ref<CategoryColorId>(categoryColorList[0])
+const props = defineProps<{
+  icon: CategoryIconName | null
+  colorId: CategoryColorId | null
+}>()
+
+const emit = defineEmits<{
+  'update:icon': [icon: CategoryIconName]
+  'update:colorId': [colorId: CategoryColorId]
+}>()
+
+const selectedIcon = computed(() => (
+  props.icon ? categoryIcons[props.icon] : undefined
+))
+const selectedColor = computed(() => (
+  props.colorId ? categoryColors[props.colorId] : undefined
+))
+const icon = computed(() => props.icon)
+const colorIdValue = computed(() => props.colorId)
 const isIconSelectorOpen = ref(false)
 const isColorSelectorOpen = ref(false)
 
 const selectCategoryIcon = (icon: CategoryIconName) => {
-  selectIcon.value = icon
+  emit('update:icon', icon)
   isIconSelectorOpen.value = false
 }
 
 const selectCategoryColor = (colorId: CategoryColorId) => {
-  selectColorId.value = colorId
+  emit('update:colorId', colorId)
   isColorSelectorOpen.value = false
 }
 </script>

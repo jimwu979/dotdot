@@ -15,7 +15,7 @@
         :data-tag-id="tag.id"
         @pointerdown="startTagInteraction($event, tag.id)"
       >
-        {{ tag.text }}
+        {{ tag.name }}
       </button>
       <button
         key="add-tag"
@@ -34,7 +34,7 @@
       ref="dragPreviewElement"
       :class="[ 'tag-drag-preview', { dropping: isDropping }]"
       :style="dragPreviewStyle"
-      v-text="dragPreviewTag.text"
+      v-text="dragPreviewTag.name"
      />
     <div
       class="tag-editor-backdrop"
@@ -79,7 +79,7 @@
 
   <ConfirmDialog
     :open="isDeleteConfirmOpen"
-    :message="`確定要刪除「${selectedTag?.text}」嗎？`"
+    :message="`確定要刪除「${selectedTag?.name}」嗎？`"
     confirm-text="確定刪除"
     confirm-type="delete"
     @cancel="isDeleteConfirmOpen = false"
@@ -98,11 +98,7 @@ import {
 import { Plus, Trash } from '@lucide/vue'
 import Btn from '@/mobile/components/btn.vue'
 import ConfirmDialog from '@/mobile/components/ConfirmDialog.vue'
-
-interface Tag {
-  id: number
-  text: string
-}
+import type { Tag } from '@/shared/stores/category'
 
 interface TagRow {
   top: number
@@ -110,16 +106,15 @@ interface TagRow {
   elements: HTMLButtonElement[]
 }
 
-const tagList = ref<Tag[]>([
-  { id: 1, text: '生活用品' },
-  { id: 2, text: '悠遊卡'   },
-  { id: 3, text: '衛生紙'   },
-  { id: 4, text: '修車'     },
-  { id: 5, text: '早餐'     },
-  { id: 6, text: '烈酒'     },
-  { id: 7, text: '酒精飲料' },
-  { id: 8, text: '轉帳'     },
-])
+const props = defineProps<{
+  tags: Tag[]
+  nextTagId: number
+}>()
+
+const emit = defineEmits<{
+  'update:tags': [tags: Tag[]]
+}>()
+
 const tagListElement      = ref<ComponentPublicInstance | null>(null)
 const dragPreviewElement  = ref<HTMLButtonElement | null>(null)
 const draggedTagId        = ref<number | null>(null)
@@ -137,15 +132,15 @@ let clearActiveInteraction: (() => void) | null = null
 let tagEditorReadyTimer: number | undefined
 
 const displayedTagList = computed<Tag[]>(() => {
-  if (!dragOrder.value) return tagList.value
+  if (!dragOrder.value) return props.tags
 
   return dragOrder.value
-    .map(tagId => tagList.value.find(tag => tag.id === tagId))
+    .map(tagId => props.tags.find(tag => tag.id === tagId))
     .filter((tag): tag is Tag => Boolean(tag))
 })
 
 const selectedTag = computed<Tag | undefined>(() => {
-  return tagList.value.find(tag => tag.id === selectedTagId.value)
+  return props.tags.find(tag => tag.id === selectedTagId.value)
 })
 
 const showTagEditor = () => {
@@ -158,12 +153,12 @@ const showTagEditor = () => {
 }
 
 const openTagEditor = (tagId: number) => {
-  const tag = tagList.value.find(tag => tag.id === tagId)
+  const tag = props.tags.find(tag => tag.id === tagId)
 
   if (!tag) return
 
   selectedTagId.value = tagId
-  draftTagText.value  = tag.text
+  draftTagText.value  = tag.name
   isCreatingTag.value = false
   showTagEditor()
 }
@@ -186,23 +181,33 @@ const confirmTagEdit = () => {
   const nextTagText = draftTagText.value.trim()
   if (!nextTagText) return
   if (isCreatingTag.value) {
-    const nextTagId = Math.max(0, ...tagList.value.map(tag => tag.id)) + 1
-    tagList.value.push({
-      id: nextTagId,
-      text: nextTagText,
-    })
+    emit('update:tags', [
+      ...props.tags,
+      {
+        id: props.nextTagId,
+        index: props.tags.length + 1,
+        name: nextTagText,
+      },
+    ])
     closeTagEditor()
     return
   }
   const tag = selectedTag.value
   if (!tag) return
-  tag.text = nextTagText
+  emit('update:tags', props.tags.map(tag => (
+    tag.id === selectedTagId.value
+      ? { ...tag, name: nextTagText }
+      : tag
+  )))
   closeTagEditor()
 }
 
 const deleteSelectedTag = () => {
   if (selectedTagId.value === null) return
-  tagList.value = tagList.value.filter(tag => tag.id !== selectedTagId.value)
+  emit('update:tags', props.tags
+    .filter(tag => tag.id !== selectedTagId.value)
+    .map((tag, index) => ({ ...tag, index: index + 1 })),
+  )
   closeTagEditor()
 }
 
@@ -268,11 +273,14 @@ const finishTagDrop = (tagId: number) => {
   const previewRect = dragPreviewElement.value?.getBoundingClientRect()
 
   if (dragOrder.value) {
-    const tagMap = new Map(tagList.value.map(tag => [tag.id, tag]))
+    const tagMap = new Map(props.tags.map(tag => [tag.id, tag]))
 
-    tagList.value = dragOrder.value
+    const sortedTags = dragOrder.value
       .map(id => tagMap.get(id))
       .filter((tag): tag is Tag => Boolean(tag))
+      .map((tag, index) => ({ ...tag, index: index + 1 }))
+
+    emit('update:tags', sortedTags)
   }
 
   dragOrder.value = null
@@ -350,14 +358,14 @@ const startTagInteraction = (event: PointerEvent, tagId: number) => {
     if (!isDragging && moveDistance < 5) return
 
     if (!isDragging) {
-      const tag = tagList.value.find(item => item.id === tagId)
+      const tag = props.tags.find(item => item.id === tagId)
 
       if (!tag) return
 
       isDragging = true
       dragPreviewTag.value = tag
       draggedTagId.value = tagId
-      dragOrder.value = tagList.value.map(item => item.id)
+      dragOrder.value = props.tags.map(item => item.id)
       dragPreviewStyle.value = {
         top:    `${tagRect.top   }px`,
         left:   `${tagRect.left  }px`,

@@ -10,6 +10,7 @@
         <p>{{ message }}</p>
         <div class="dialog-actions">
           <Btn
+            v-if="showCancel"
             :text="cancelText"
             type="cancel"
             @click="emit('cancel')"
@@ -35,10 +36,12 @@ withDefaults(defineProps<{
   cancelText?: string
   confirmText?: string
   confirmType?: 'confirm' | 'delete'
+  showCancel?: boolean
 }>(), {
   cancelText: '取消',
   confirmText: '確定',
   confirmType: 'confirm',
+  showCancel: true,
 })
 
 const emit = defineEmits<{

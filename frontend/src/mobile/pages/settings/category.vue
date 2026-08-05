@@ -35,7 +35,13 @@
             <component :is="i.icon" />
           </div>
           <h6>{{ i.name }}</h6>
-          <router-link class="btn edit" to="/mobile/settings/category-editor">
+          <router-link
+            class="btn edit"
+            :to="{
+              path: '/mobile/settings/category-editor',
+              query: { id: i.id },
+            }"
+          >
             <Pencil />
           </router-link>
           <button
@@ -71,7 +77,10 @@
       </Teleport>
       <router-link
         class="add-category"
-        to="/mobile/settings/category-editor"
+        :to="{
+          path: '/mobile/settings/category-editor',
+          query: { isExpense: String(isExpense) },
+        }"
       >
         添加新類別
       </router-link>
