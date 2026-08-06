@@ -38,7 +38,7 @@
           v-for="(n, n_index) in i.link"
           :key="n_index"
           :to="{
-            path: `/mobile/settings/${i.route}`,
+            path: `/mobile/settings/${i.route === 'cycle' ? `cycle-${n.query === 'automatic' ? 'auto' : 'dotdot'}` : i.route}`,
             query: { [i.queryKey]: n.query },
           }"
         >

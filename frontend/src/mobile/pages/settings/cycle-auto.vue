@@ -1,5 +1,5 @@
 <template>
-  <main class="page cycle">
+  <main class="page cycleAuto">
     <AppHeader />
   </main>
 </template>
@@ -9,7 +9,7 @@ import AppHeader from '@/mobile/components/AppHeader.vue'
 </script>
 
 <style lang="scss" scoped>
-.page.cycle {
+.page.cycleAuto {
 
 }
 </style>
