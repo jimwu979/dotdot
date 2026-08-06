@@ -10,61 +10,62 @@
     <main>
 
       <!-- 名稱 -->
-      <section>
-        <label class="require">名稱</label>
-        <div class="input">
-          <input
-            v-model="categoryData.name"
-            type="text"
-          >
-          <p
-            v-if="nameError"
-            class="error-message"
-            v-text="nameError"
-          />
-        </div>
-      </section>
+      <FormItem
+        class="input"
+        :label="'名稱'"
+        :require="true"
+      >
+        <input
+          v-model="categoryData.name"
+          type="text"
+        >
+        <p
+          v-if="nameError"
+          class="error-message"
+          v-text="nameError"
+        />
+      </FormItem>
 
       <!-- 類別 -->
-      <section>
-        <label class="require">類別</label>
-        <div class="radio">
-          <button
-            type="button"
-            :class="{ selected: categoryData.isExpense === false }"
-            @click="categoryData.isExpense = false"
-          >
-            收入
-          </button>
-          <button
-            type="button"
-            :class="{ selected: categoryData.isExpense === true }"
-            @click="categoryData.isExpense = true"
-          >
-            支出
-          </button>
-        </div>
-      </section>
+      <FormItem
+        class="radio"
+        :label="'類別'"
+        :require="true"
+      >
+        <button
+          type="button"
+          :class="{ selected: categoryData.isExpense === false }"
+          @click="categoryData.isExpense = false"
+        >
+          收入
+        </button>
+        <button
+          type="button"
+          :class="{ selected: categoryData.isExpense === true }"
+          @click="categoryData.isExpense = true"
+        >
+          支出
+        </button>
+      </FormItem>
 
       <!-- 圖示 -->
-      <section>
-        <label class="require">圖示</label>
+      <FormItem
+        :label="'圖示'"
+        :require="true"
+      >
         <IconEditor
           v-model:icon="categoryData.icon"
           v-model:color-id="categoryData.color"
         />
-      </section>
+      </FormItem>
 
       <!-- 標籤 -->
-      <section>
-        <label>標籤</label>
-        <div class="tag">
-          <TagEditor
-            v-model:tags="categoryData.tags"
-            :next-tag-id="nextTagId"
-          />
-        </div>
-      </section>
+      <FormItem :label="'標籤'">
+        <TagEditor
+          v-model:tags="categoryData.tags"
+          :next-tag-id="nextTagId"
+        />
+      </FormItem>
 
       <!-- 按鈕 -->
       <div>
@@ -125,6 +126,7 @@
   import AppHeader from '@/mobile/components/AppHeader.vue'
   import Breadcrumb from '@/mobile/components/Breadcrumb.vue'
   import ConfirmDialog from '@/mobile/components/ConfirmDialog.vue'
+  import FormItem from '@/mobile/components/FormItem.vue'
   import btn from '@/mobile/components/btn.vue'
   import IconEditor from '@/mobile/components/settings/type-edit/IconEditor.vue'
   import TagEditor from '@/mobile/components/settings/type-edit/TagEditor.vue'
@@ -265,79 +267,60 @@
     >main{
       gap: 28px;
       @include flexbox(column, flex-start, stretch);
-      >section{
-        gap: 6px;
-        @include flexbox(column, flex-start, flex-start);
-        >label{
-          color: $grey;
-          @include h3();
-          &.require{
-            &:after{
-              content: '*';
-              color: $brown;
-              font-size: 22px;
-              display: inline-block;
-              transform: translateY(-2px);
-            }
+      >.form-item{
+        &.input{
+          :deep(>div > input){
+            width: 100%;
+            height: 50px;
+            padding: 0 4px;
+            border-radius: 8px;
+            border: 1px solid $stone;
+            background-color: $white;
+          }
+          :deep(>div > .error-message){
+            color: $red;
+            margin-top: 4px;
+            @include p();
           }
         }
-        >div{
-          width: 100%;
-          margin-top: 4px;
-          &.input{
-            >input{
-              width: 100%;
-              height: 50px;
-              padding: 0 4px;
-              border-radius: 8px;
-              border: 1px solid $stone;
-              background-color: $white;
-            }
-            >.error-message{
-              color: $red;
-              margin-top: 4px;
-              @include p();
-            }
-          }
-          &.radio{
+        &.radio{
+          :deep(>div){
             gap: 20px;
             @include flexbox(row, flex-start, center);
-            >button{
-              $size: 16px;
-              @include h3();
-              position: relative;
-              padding-left: 28px;
-              &:before, &:after{
-                left: 0;
-                content: '';
-                aspect-ratio: 1/1;
-                position: absolute;
-                border-radius: 50%;
-                display: inline-block;
-              }
-              &:before{
-                width: 24px;
-                top: calc(50% - 12px);
-                border: 1px solid $brown;
-              }
+          }
+          :deep(>div > button){
+            $size: 16px;
+            @include h3();
+            position: relative;
+            padding-left: 28px;
+            &:before, &:after{
+              left: 0;
+              content: '';
+              aspect-ratio: 1/1;
+              position: absolute;
+              border-radius: 50%;
+              display: inline-block;
+            }
+            &:before{
+              width: 24px;
+              top: calc(50% - 12px);
+              border: 1px solid $brown;
+            }
+            &:after{
+              left: 4px;
+              opacity: 0;
+              width: 16px;
+              transition: .2s;
+              top: calc(50% - 8px);
+              transform: scale(.6);
+              background-color: $brown;
+            }
+            &.selected{
               &:after{
-                left: 4px;
-                opacity: 0;
-                width: 16px;
-                transition: .2s;
-                top: calc(50% - 8px);
-                transform: scale(.6);
-                background-color: $brown;
-              }
-              &.selected{
-                &:after{
-                  opacity: 1;
-                  transform: scale(1);
-                }
+                opacity: 1;
+                transform: scale(1);
               }
             }
-          }
-          &.tag{
           }
         }
       }
