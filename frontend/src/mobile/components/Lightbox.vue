@@ -6,6 +6,10 @@
   >
     <section>
       <div class="top-bar">
+        <h2
+          v-if="title"
+          v-text="title"
+        />
         <button
           type="button"
           @click="emit('close')"
@@ -26,6 +30,7 @@ import { X } from '@lucide/vue'
 
 const props = defineProps<{
   open: boolean
+  title?: string
 }>()
 
 const emit = defineEmits<{
@@ -97,10 +102,16 @@ onBeforeUnmount(unlockBackgroundScroll)
     @include flexbox(column, flex-start, flex-end);
     max-height: calc(100dvh - $header_height - 24px);
     >.top-bar{
+      width: 100%;
       padding: 12px;
-      @include flexbox(row, flex-end, center);
+      @include flexbox(row, space-between, center);
+      >h2{
+        @include h2();
+        font-weight: 600;
+      }
       >button{
         width: 40px;
+        margin-left: auto;
         aspect-ratio: 1/1;
         border-radius: 50%;
         background-color: $oat;
