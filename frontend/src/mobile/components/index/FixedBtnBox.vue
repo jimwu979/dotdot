@@ -38,7 +38,11 @@
       <div class="list fixed">
         <h5>釘選</h5>
         <ul>
-          <li v-for="(i, index) in getDotdotList(true)" :key="index">
+          <li
+            v-for="i in getDotdotList(true)"
+            :key="i.id"
+            @click="addDotdotRecord(i)"
+          >
             <transaction
               :icon="i.categoryIcon"
               :color="i.categoryColor"
@@ -53,7 +57,11 @@
       </div>
       <div class="list">
         <ul>
-          <li v-for="(i, index) in getDotdotList(false)" :key="index">
+          <li
+            v-for="i in getDotdotList(false)"
+            :key="i.id"
+            @click="addDotdotRecord(i)"
+          >
             <transaction
               :icon="i.categoryIcon"
               :color="i.categoryColor"
@@ -72,116 +80,120 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, type Ref } from 'vue'
+  import { computed, onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
   import Transaction from '@/mobile/components/transaction.vue'
   import { categoryColors } from '@/shared/colors/category'
   import { categoryIcons } from '@/shared/icons/category'
   import { useCategoryStore } from '@/shared/stores/category'
+  import { useDotdotStore, type DotdotItem } from '@/shared/stores/dotdot'
+  import { useRecordStore } from '@/shared/stores/record'
+
+  interface DotdotDisplayItem extends DotdotItem {
+    categoryIcon: string
+    categoryColor: string
+    categoryName: string
+    tag: string[]
+    note: string
+    amount: number
+    isExpense: boolean
+  }
 
   const categoryStore = useCategoryStore()
+  const dotdotStore = useDotdotStore()
+  const recordStore = useRecordStore()
   const isExpense: Ref<boolean> = ref(true)
+  const currentTime = ref(new Date())
   // const selectorIsOpen: Ref<boolean> = ref(true)
   const selectorType: Ref<string> = ref('') // 'category' || 'dotdot' || ''
+  let currentTimeTimer: number | undefined
+
   const categoryList = computed(() => (
     categoryStore.categoryList
       .slice()
       .sort((categoryA, categoryB) => categoryA.index - categoryB.index)
   ))
-  const dotdotList = [
-    {
-      fixed: true,
-      sort: 3,
-      categoryIcon: '',
-      categoryColor: '#FFF3BD',
-      categoryName: '電話費',
-      tag: [],
-      note: '',
-      amount: 599,
-      isExpense: true,
-    },
-    {
-      fixed: true,
-      sort: 2,
-      categoryIcon: '',
-      categoryColor: '#DDEFD8',
-      categoryName: '交通',
-      tag: ['悠遊卡'],
-      note: '',
-      amount: 1000,
-      isExpense: true,
-    },
-    {
-      fixed: true,
-      sort: 1,
-      categoryIcon: '',
-      categoryColor: '#DCEBFA',
-      categoryName: '生活費',
-      tag: [],
-      note: '',
-      amount: 10000,
-      isExpense: false,
-    },
-    {
-      fixed: false,
-      sort: 1,
-      categoryIcon: '',
-      categoryColor: '#DCEBFA',
-      categoryName: '正餐',
-      tag: ['早餐'],
-      note: '茶葉蛋 + 鮮奶',
-      amount: 50,
-      isExpense: true,
-    },
-    {
-      fixed: false,
-      sort: 3,
-      categoryIcon: '',
-      categoryColor: '#DCEBFA',
-      categoryName: '正餐',
-      tag: ['早餐', '711拿鐵'],
-      note: '茶葉蛋 + 拿鐵 + 拿鐵 + 拿鐵 + 拿鐵 + 拿鐵',
-      amount: 55,
-      isExpense: true,
-    },
-    {
-      fixed: false,
-      sort: 2,
-      categoryIcon: '',
-      categoryColor: '#E8DDF5',
-      categoryName: '晚餐',
-      tag: [],
-      note: '',
-      amount: 75,
-      isExpense: true,
-    },
-    {
-      fixed: true,
-      sort: 4,
-      categoryIcon: '',
-      categoryColor: '#F9DCCF',
-      categoryName: '儲糧',
-      tag: ['豆漿'],
-      note: '',
-      amount: 50,
-      isExpense: true,
-    },
-    {
-      fixed: true,
-      sort: 5,
-      categoryIcon: '',
-      categoryColor: '#F9DCCF',
-      categoryName: '儲糧',
-      tag: ['鮮奶'],
-      note: '',
-      amount: 100,
-      isExpense: true,
-    },
-  ]
-  const getDotdotList = (isFixed: boolean) => {
-    return dotdotList
-      .filter(i => i.fixed === isFixed)
-      .sort((a, b) => a.sort - b.sort)
+
+  const getTimeInMinutes = (time: string) => {
+    const [hour = 0, minute = 0] = time.split(':').map(Number)
+
+    return hour * 60 + minute
   }
+
+  const isInDisplayTiming = (item: DotdotItem) => {
+    if (item.fixed) return true
+
+    const now = currentTime.value
+
+    if (!item.displayTiming.weekdays.includes(now.getDay())) return false
+
+    const minutes = now.getHours() * 60 + now.getMinutes()
+    const startMinutes = getTimeInMinutes(item.displayTiming.startTime)
+    const endMinutes = getTimeInMinutes(item.displayTiming.endTime)
+
+    if (startMinutes <= endMinutes) {
+      return minutes >= startMinutes && minutes <= endMinutes
+    }
+
+    return minutes >= startMinutes || minutes <= endMinutes
+  }
+
+  const getDotdotDisplayItem = (item: DotdotItem): DotdotDisplayItem => {
+    const category = categoryStore.categoryList
+      .find(category => category.id === item.record.categoryId)
+    const selectedTagIds = new Set(item.record.tagIds)
+
+    return {
+      ...item,
+      categoryIcon: category?.icon ?? '',
+      categoryColor: category ? categoryColors[category.color] : '',
+      categoryName: category?.name ?? '',
+      tag: category?.tags
+        .filter(tag => selectedTagIds.has(tag.id))
+        .sort((tagA, tagB) => tagA.index - tagB.index)
+        .map(tag => tag.name) ?? [],
+      note: item.record.note,
+      amount: item.record.amount,
+      isExpense: category?.isExpense ?? true,
+    }
+  }
+
+  const getDotdotList = (isFixed: boolean) => {
+    return dotdotStore
+      .getDotdotList(isFixed, true)
+      .filter(isInDisplayTiming)
+      .map(getDotdotDisplayItem)
+  }
+
+  const getCurrentDate = () => {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+
+    return `${year}-${month}-${day}`
+  }
+
+  const addDotdotRecord = (item: DotdotItem) => {
+    recordStore.addRecord({
+      categoryId: item.record.categoryId,
+      tagIds: [...item.record.tagIds],
+      note: item.record.note,
+      amount: item.record.amount,
+      occurredAt: getCurrentDate(),
+    })
+    selectorType.value = ''
+  }
+
+  onMounted(() => {
+    currentTimeTimer = window.setInterval(() => {
+      currentTime.value = new Date()
+    }, 30_000)
+  })
+
+  onBeforeUnmount(() => {
+    window.clearInterval(currentTimeTimer)
+  })
+
   const clickAddBtn = () => {
     selectorType.value = (selectorType.value === '') ? 'category' : ''
   }
@@ -348,6 +360,7 @@
           @include flexbox(column, flex-start, stretch);
           >li{
             height: 46px;
+            cursor: pointer;
             @include flexbox(row, center, center);
           }
         }
