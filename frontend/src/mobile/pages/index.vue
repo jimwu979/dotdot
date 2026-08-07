@@ -40,6 +40,7 @@
     tag: string[]
     note: string
     amount: number
+    isAutomatic: boolean
   }
 
   interface DailyRecords {
@@ -97,6 +98,7 @@
           tag,
           note: record.note,
           amount: record.amount,
+          isAutomatic: record.isAutomatic,
         })
 
         return items

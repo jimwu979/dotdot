@@ -51,6 +51,7 @@
   const selectedTagIds = ref<number[]>([])
   const note = ref('')
   const amount = ref(0)
+  const isAutomatic = ref(false)
   const occurredAt = ref('')
   const calculatorKey = computed(() => (
     `record-${String(route.query.recordId ?? '')}`
@@ -123,6 +124,7 @@
       selectedTagIds.value = [...record.tagIds]
       note.value = record.note
       amount.value = record.amount
+      isAutomatic.value = record.isAutomatic
       occurredAt.value = record.occurredAt
       return
     }
@@ -141,6 +143,7 @@
     selectedTagIds.value = []
     note.value = ''
     amount.value = 0
+    isAutomatic.value = false
     occurredAt.value = getCurrentDate()
   }, { immediate: true })
 
@@ -155,6 +158,7 @@
       tagIds: [...selectedTagIds.value],
       note: note.value,
       amount: recordAmount,
+      isAutomatic: isAutomatic.value,
       occurredAt: occurredAt.value,
     }
 

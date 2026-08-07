@@ -23,6 +23,7 @@
             :tag="n.tag"
             :note="n.note"
             :amount="n.amount"
+            :status="n.isAutomatic ? 'automatic' : undefined"
           />
         </router-link>
       </div>
@@ -43,6 +44,7 @@
     tag: string[]
     note: string
     amount: number
+    isAutomatic: boolean
   }
 
   interface DailyRecords {

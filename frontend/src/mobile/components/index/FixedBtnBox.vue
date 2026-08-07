@@ -179,6 +179,7 @@
       tagIds: [...item.record.tagIds],
       note: item.record.note,
       amount: item.record.amount,
+      isAutomatic: false,
       occurredAt: getCurrentDate(),
     })
     selectorType.value = ''

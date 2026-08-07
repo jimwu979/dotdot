@@ -7,6 +7,12 @@
         v-if="iconComponent"
         :is="iconComponent"
       />
+      <span
+        v-if="status"
+        :class="['status', status]"
+      >
+        <Repeat2 />
+      </span>
     </div>
 
     <!-- 類別名稱 -->
@@ -28,6 +34,7 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue'
+  import { Repeat2 } from '@lucide/vue'
   import {
     categoryIcons,
     type CategoryIconName,
@@ -41,6 +48,7 @@
     tag: string[]
     note: string
     amount: number
+    status?: 'automatic'
   }>()
 
   const iconComponent = computed(() => {
@@ -57,12 +65,29 @@
   @include flexbox(row, flex-start, center);
   > .icon {
     width: 32px;
+    flex: 0 0 auto;
+    position: relative;
     aspect-ratio: 1/1;
     border-radius: 50%;
     @include flexbox(row, center, center);
     > svg {
       width: 18px;
       stroke: $white;
+    }
+    >.status{
+      right: -4px;
+      bottom: -4px;
+      width: 18px;
+      flex: 0 0 auto;
+      position: absolute;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      background-color: $yellow;
+      @include flexbox(row, center, center);
+      >svg{
+        height: 13px;
+        stroke: $black;
+      }
     }
   }
   > h6 {
