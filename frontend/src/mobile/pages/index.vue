@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue'
+  import { computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import AppHeader    from '@/mobile/components/AppHeader.vue'
   import BalanceCard  from '@/mobile/components/index/BalanceCard.vue'
@@ -145,6 +145,27 @@
     .filter(item => item.isExpense)
     .reduce((total, item) => total + item.amount, 0)
   )
+
+  const isIOSWebKit = () => {
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    const isTouchMac = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+
+    return isIOSDevice || isTouchMac
+  }
+
+  onMounted(() => {
+    if (!isIOSWebKit()) return
+
+    // iOS Safari 在 SPA 換頁後可能保留錯誤的 visual viewport 與觸控位置；
+    // 實際捲動 1px 再回到頂端，可強制 WebKit 重新計算畫面與 hit-test 區域。
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 1)
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0)
+      })
+    })
+  })
 </script>
 
 <style lang="scss" scoped>

@@ -1,9 +1,18 @@
 <template>
   <div class="fixed-btn-box">
-
     <!-- 按鈕 -->
-    <button class="assistant" @click="selectorType = 'dotdot'" />
-    <button :class="['add', {'close-btn': selectorType !== ''}]" @click="clickAddBtn" />
+    <button
+      class="assistant"
+      type="button"
+      aria-label="開啟點點記帳"
+      @click.stop="toggleSelector('dotdot')"
+    />
+    <button
+      :class="['add', { 'close-btn': selectorType !== '' }]"
+      type="button"
+      :aria-label="selectorType === '' ? '開啟記帳類別' : '關閉選單'"
+      @click.stop="clickAddButton"
+    />
 
     <!-- 記帳類別選擇器 -->
     <section class="category-selector" :class="{'isOpen': selectorType === 'category'}">
@@ -75,7 +84,6 @@
         </ul>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -104,7 +112,9 @@
   const isExpense: Ref<boolean> = ref(true)
   const currentTime = ref(new Date())
   // const selectorIsOpen: Ref<boolean> = ref(true)
-  const selectorType: Ref<string> = ref('') // 'category' || 'dotdot' || ''
+  type SelectorType = 'category' | 'dotdot' | ''
+
+  const selectorType: Ref<SelectorType> = ref('')
   let currentTimeTimer: number | undefined
 
   const categoryList = computed(() => (
@@ -195,8 +205,12 @@
     window.clearInterval(currentTimeTimer)
   })
 
-  const clickAddBtn = () => {
-    selectorType.value = (selectorType.value === '') ? 'category' : ''
+  const toggleSelector = (type: Exclude<SelectorType, ''>) => {
+    selectorType.value = selectorType.value === type ? '' : type
+  }
+
+  const clickAddButton = () => {
+    selectorType.value = selectorType.value === '' ? 'category' : ''
   }
 </script>
 
@@ -228,7 +242,6 @@
       }
     }
     &.add {
-      z-index: 1;
       transition: .2s;
       background-color: $yellow;
       &::before,
