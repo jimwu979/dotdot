@@ -19,26 +19,23 @@
           <strong>{{ month.year }} 年 {{ month.month }} 月</strong>
           <b>總計 {{ formatSignedAmount(month.total) }}</b>
         </div>
-        <ul>
-          <li
+        <div class="list">
+          <div
             v-for="item in month.items"
             :key="item.key"
-            :class="item.type"
+            class="transaction-item"
           >
-            <div class="record-icon">
-              <Sparkles v-if="item.type === 'balance'" />
-              <TrendingUp v-else-if="item.type === 'income'" />
-              <TrendingDown v-else />
-            </div>
-            <div class="record-content">
-              <strong>{{ getTypeLabel(item.type) }}</strong>
-              <p>{{ item.note }}</p>
-            </div>
-            <b :class="{ positive: item.signedAmount > 0 }">
-              {{ formatSignedAmount(item.signedAmount) }}
-            </b>
-          </li>
-        </ul>
+            <Transaction
+              :icon="getTypeIcon(item.type)"
+              :color="getTypeColor(item.type)"
+              :category="getTypeLabel(item.type)"
+              :is-expense="item.signedAmount < 0"
+              :tag="[]"
+              :note="item.note"
+              :amount="Math.abs(item.signedAmount)"
+            />
+          </div>
+        </div>
       </article>
 
       <p v-if="monthlyRecords.length === 0" class="empty-state">
@@ -99,7 +96,12 @@
             @input="amountError = ''"
           >
           <p class="error-message">
-            <b :class="{ show: amountError }">請輸入有效的金額</b>
+            <b
+              :class="{ show: amountError }"
+              :style="{ color: categoryColors.pink }"
+            >
+              請輸入有效的金額
+            </b>
           </p>
         </section>
         <section class="form-field">
@@ -130,7 +132,12 @@
             @input="noteError = ''"
           >
           <p class="error-message">
-            <b :class="{ show: noteError }">備註為必填欄位</b>
+            <b
+              :class="{ show: noteError }"
+              :style="{ color: categoryColors.pink }"
+            >
+              備註為必填欄位
+            </b>
           </p>
         </section>
 
@@ -144,8 +151,11 @@
 
 <script lang="ts" setup>
   import { computed, reactive, ref } from 'vue'
-  import { PiggyBank, Sparkles, TrendingDown, TrendingUp } from '@lucide/vue'
+  import { PiggyBank } from '@lucide/vue'
   import AppHeader from '@/mobile/components/AppHeader.vue'
+  import Transaction from '@/mobile/components/transaction.vue'
+  import { categoryColors } from '@/shared/colors/category'
+  import type { CategoryIconName } from '@/shared/icons/category'
   import { useCategoryStore } from '@/shared/stores/category'
   import { useRecordStore } from '@/shared/stores/record'
   import {
@@ -290,6 +300,16 @@
 
     return type === 'income' ? '收入' : '支出'
   }
+  const getTypeIcon = (type: SavingsDisplayType): CategoryIconName => {
+    if (type === 'balance') return 'Sparkles'
+
+    return type === 'income' ? 'TrendingUp' : 'TrendingDown'
+  }
+  const getTypeColor = (type: SavingsDisplayType) => {
+    if (type === 'balance') return categoryColors.amber
+
+    return type === 'income' ? categoryColors.mint : categoryColors.pink
+  }
 
   const resetDraft = () => {
     draft.type = 'expense'
@@ -396,10 +416,11 @@
     margin-top: 30px;
     > article {
       overflow: hidden;
-      margin-top: 12px;
-      border-radius: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
       border: 1px solid $oat;
       background-color: $white;
+      @include flexbox(column, flex-start, stretch);
       > .month-heading {
         width: 100%;
         padding: 0 12px;
@@ -417,69 +438,12 @@
           text-align: right;
         }
       }
-      > ul {
-        padding: 5px 10px;
-        > li {
-          gap: 10px;
-          min-height: 58px;
-          padding: 8px 0;
+      > .list {
+        width: 100%;
+        padding: 8px;
+        > .transaction-item {
+          height: 46px;
           @include flexbox(row, flex-start, center);
-          + li {
-            border-top: 1px solid $oat;
-          }
-          > .record-icon {
-            width: 36px;
-            flex: 0 0 auto;
-            aspect-ratio: 1/1;
-            border-radius: 50%;
-            background-color: $stone;
-            @include flexbox(row, center, center);
-            > svg {
-              width: 19px;
-              stroke: $white;
-            }
-          }
-          > .record-content {
-            gap: 8px;
-            flex: 1;
-            min-width: 0;
-            @include flexbox(row, flex-start, center);
-            > strong {
-              flex: 0 0 auto;
-              font-size: 15px;
-            }
-            > p {
-              flex: 1;
-              min-width: 0;
-              color: $grey;
-              font-size: 12px;
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-            }
-          }
-          > b {
-            font-size: 14px;
-            &.positive {
-              color: $green;
-            }
-          }
-          &.balance {
-            > .record-icon {
-              background-color: $yellow;
-            }
-            > .record-content > strong {
-              color: $brown;
-            }
-          }
-          &.income > .record-icon {
-            background-color: $green;
-            // background-color: #94ce60;
-          }
-          &.expense > .record-icon {
-            background-color: $red;
-            // background-color: #e66f97;
-          }
         }
       }
     }
@@ -597,7 +561,6 @@
           top: 4px;
           left: 0;
           opacity: 0;
-          color: $red;
           font-weight: 400;
           position: absolute;
           pointer-events: none;

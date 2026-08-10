@@ -12,7 +12,7 @@ import {
   Music, Film, Ticket, HeartPulse, Pill,
   Stethoscope, Hospital, BriefcaseBusiness, WalletCards, Banknote,
   ReceiptText, PiggyBank, CircleDollarSign, Dog, Flower2,
-  Receipt, TrendingUp,
+  Receipt, Sparkles, TrendingDown, TrendingUp,
 } from '@lucide/vue'
 
 export const categoryIcons = {
@@ -28,7 +28,7 @@ export const categoryIcons = {
   Music, Film, Ticket, HeartPulse, Pill,
   Stethoscope, Hospital, BriefcaseBusiness, WalletCards, Banknote,
   ReceiptText, PiggyBank, CircleDollarSign, Dog, Flower2,
-  Receipt, TrendingUp,
+  Receipt, Sparkles, TrendingDown, TrendingUp,
 } satisfies Record<string, Component>
 
 export type CategoryIconName = keyof typeof categoryIcons
