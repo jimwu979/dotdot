@@ -13,7 +13,7 @@
     <FixedBtnBox />
 
     <!-- header -->
-    <AppHeader />
+    <AppHeader right-action="scroll" />
 
   </main>
 </template>

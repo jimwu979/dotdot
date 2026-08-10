@@ -85,7 +85,7 @@
         添加新類別
       </router-link>
     </main>
-    <AppHeader />
+    <AppHeader right-action="scroll" />
   </main>
 </template>
 

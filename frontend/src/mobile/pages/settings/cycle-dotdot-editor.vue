@@ -83,18 +83,13 @@
             @click="saveDotdot"
           />
         </div>
-        <button
-          v-if="dotdotId !== null"
-          type="button"
-          @click="isDeleteConfirmOpen = true"
-        >
-          <Trash />
-          刪除此項目
-        </button>
       </div>
 
     </main>
-    <AppHeader />
+    <AppHeader
+      :right-action="dotdotId !== null ? 'delete' : undefined"
+      @delete="isDeleteConfirmOpen = true"
+    />
     <ConfirmDialog
       :open="isCancelConfirmOpen"
       message="確定要取消編輯嗎？尚未儲存的變更將會遺失。"
@@ -124,7 +119,6 @@
 <script lang="ts" setup>
   import { computed, reactive, ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
-  import { Trash } from '@lucide/vue'
   import AppHeader from '@/mobile/components/AppHeader.vue'
   import Breadcrumb from '@/mobile/components/Breadcrumb.vue'
   import ConfirmDialog from '@/mobile/components/ConfirmDialog.vue'
@@ -341,19 +335,6 @@
           gap: 12px;
           width: 100%;
           @include flexbox(row, flex-end, center);
-        }
-        >button{
-          gap: 2px;
-          color: $brown;
-          padding: 4px 12px;
-          border-radius: 8px;
-          background-color: $oat;
-          border: 1px solid $stone;
-          @include flexbox(row, center, center);
-          >svg{
-            width: 18px;
-            stroke: $brown;
-          }
         }
       }
     }

@@ -99,17 +99,12 @@
             @click="saveAutomatic"
           />
         </div>
-        <button
-          v-if="automaticId !== null"
-          type="button"
-          @click="isDeleteConfirmOpen = true"
-        >
-          <Trash />
-          刪除此項目
-        </button>
       </div>
     </main>
-    <AppHeader />
+    <AppHeader
+      :right-action="automaticId !== null ? 'delete' : undefined"
+      @delete="isDeleteConfirmOpen = true"
+    />
     <ConfirmDialog
       :open="isCancelConfirmOpen"
       message="確定要取消編輯嗎？尚未儲存的變更將會遺失。"
@@ -139,7 +134,7 @@
 <script lang="ts" setup>
   import { computed, reactive, ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
-  import { Check, Trash } from '@lucide/vue'
+  import { Check } from '@lucide/vue'
   import AppHeader from '@/mobile/components/AppHeader.vue'
   import Breadcrumb from '@/mobile/components/Breadcrumb.vue'
   import Btn from '@/mobile/components/btn.vue'
@@ -432,19 +427,6 @@
           gap: 12px;
           width: 100%;
           @include flexbox(row, flex-end, center);
-        }
-        >button{
-          gap: 2px;
-          color: $brown;
-          padding: 4px 12px;
-          border-radius: 8px;
-          background-color: $oat;
-          border: 1px solid $stone;
-          @include flexbox(row, center, center);
-          >svg{
-            width: 18px;
-            stroke: $brown;
-          }
         }
       }
     }

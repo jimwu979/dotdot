@@ -155,7 +155,7 @@
       <Plus />
       添加
     </router-link>
-    <AppHeader />
+    <AppHeader right-action="scroll" />
   </main>
 </template>
 

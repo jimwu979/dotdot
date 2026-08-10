@@ -150,7 +150,7 @@
         </div>
       </div>
     </Teleport>
-    <AppHeader />
+    <AppHeader right-action="scroll" />
   </main>
 </template>
 
