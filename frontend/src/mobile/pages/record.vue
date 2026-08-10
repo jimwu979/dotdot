@@ -27,7 +27,18 @@
       :amount="amount"
       @save="saveRecord"
     />
-    <AppHeader />
+    <AppHeader
+      :right-action="recordId !== null ? 'delete' : undefined"
+      @delete="isDeleteConfirmOpen = true"
+    />
+    <ConfirmDialog
+      :open="isDeleteConfirmOpen"
+      message="確定要刪除這筆帳嗎？"
+      confirm-text="確認刪除"
+      confirm-type="delete"
+      @cancel="isDeleteConfirmOpen = false"
+      @confirm="confirmDeleteRecord"
+    />
   </div>
 </template>
 
@@ -35,6 +46,7 @@
   import { computed, ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import AppHeader from '@/mobile/components/AppHeader.vue'
+  import ConfirmDialog from '@/mobile/components/ConfirmDialog.vue'
   import Category from '@/mobile/components/record/Category.vue'
   import Tag from '@/mobile/components/record/Tag.vue'
   import Note from '@/mobile/components/record/Note.vue'
@@ -47,12 +59,15 @@
   const categoryStore = useCategoryStore()
   const recordStore = useRecordStore()
   const recordId = ref<number | null>(null)
+  const originalOccurredAt = ref('')
   const categoryId = ref<number | null>(null)
   const selectedTagIds = ref<number[]>([])
   const note = ref('')
   const amount = ref(0)
   const isAutomatic = ref(false)
   const occurredAt = ref('')
+  const isDeleteConfirmOpen = ref(false)
+  const isDeleting = ref(false)
   const calculatorKey = computed(() => (
     `record-${String(route.query.recordId ?? '')}`
     + `-category-${String(route.query.categoryID ?? '')}`
@@ -104,6 +119,8 @@
     () => categoryStore.categoryList.map(category => category.id).join(','),
     () => recordStore.recordList.map(record => record.id).join(','),
   ], ([queryRecordId, queryCategoryID]) => {
+    if (isDeleting.value) return
+
     const parsedRecordId = getQueryId(queryRecordId)
 
     if (queryRecordId !== undefined) {
@@ -120,6 +137,8 @@
       }
 
       recordId.value = record.id
+      originalOccurredAt.value = record.occurredAt
+      isDeleteConfirmOpen.value = false
       categoryId.value = record.categoryId
       selectedTagIds.value = [...record.tagIds]
       note.value = record.note
@@ -139,6 +158,8 @@
     }
 
     recordId.value = null
+    originalOccurredAt.value = ''
+    isDeleteConfirmOpen.value = false
     categoryId.value = parsedCategoryId
     selectedTagIds.value = []
     note.value = ''
@@ -170,6 +191,23 @@
     }
 
     redirectToHomepage(occurredAt.value)
+  }
+
+  const confirmDeleteRecord = () => {
+    isDeleteConfirmOpen.value = false
+
+    if (recordId.value === null) return
+
+    const redirectDate = originalOccurredAt.value || occurredAt.value
+
+    isDeleting.value = true
+
+    if (recordStore.deleteRecord(recordId.value)) {
+      redirectToHomepage(redirectDate)
+      return
+    }
+
+    isDeleting.value = false
   }
 </script>
 

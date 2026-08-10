@@ -286,10 +286,21 @@ export const useRecordStore = defineStore('record', () => {
     return true
   }
 
+  const deleteRecord = (recordId: number) => {
+    const recordIndex = recordList.value.findIndex(record => record.id === recordId)
+
+    if (recordIndex === -1) return false
+
+    recordList.value.splice(recordIndex, 1)
+
+    return true
+  }
+
   return {
     recordList,
     getRecordsByMonth,
     addRecord,
     updateRecord,
+    deleteRecord,
   }
 })
