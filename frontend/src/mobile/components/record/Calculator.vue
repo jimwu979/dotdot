@@ -60,7 +60,6 @@ const props = defineProps<{
 
   const isDateSelectorOpen = ref(false)
   const isCalculating = ref(false)
-const hasCalculationError = ref(false)
 const expressionTokens = ref<string[]>(['0'])
 const operators: Operator[] = ['+', '-', '×', '÷']
 const isOperator = (value: string): value is Operator => (
@@ -75,18 +74,14 @@ const displayDate = computed(() => {
 
   return month && date ? `${month}/${date}` : ''
 })
+const roundUpToOneDecimal = (value: number) => (
+  Math.ceil(Number(value.toFixed(10)) * 10) / 10
+)
 
 watch(() => props.amount, (amount) => {
   expressionTokens.value = [String(amount)]
-  hasCalculationError.value = false
   isCalculating.value = false
 }, { immediate: true })
-
-  const resetCalculation = () => {
-  expressionTokens.value = ['0']
-  hasCalculationError.value = false
-    isCalculating.value = false
-  }
 
   const openDateSelector = () => {
     isDateSelectorOpen.value = true
@@ -102,8 +97,6 @@ watch(() => props.amount, (amount) => {
   }
 
 const inputNumber = (number: string) => {
-  if (hasCalculationError.value) resetCalculation()
-
   const lastTokenIndex = expressionTokens.value.length - 1
   const lastToken = expressionTokens.value[lastTokenIndex]
 
@@ -118,8 +111,6 @@ const inputNumber = (number: string) => {
 }
 
 const inputOperator = (operator: Operator) => {
-  if (hasCalculationError.value) resetCalculation()
-
   const lastTokenIndex = expressionTokens.value.length - 1
   const lastToken = expressionTokens.value[lastTokenIndex]
 
@@ -133,11 +124,6 @@ const inputOperator = (operator: Operator) => {
 }
 
 const deleteLastInput = () => {
-  if (hasCalculationError.value) {
-    resetCalculation()
-    return
-  }
-
   const lastTokenIndex = expressionTokens.value.length - 1
   const lastToken = expressionTokens.value[lastTokenIndex]
 
@@ -171,13 +157,12 @@ const calculateResult = () => {
 
     if (operator === '÷') {
       if (operand === 0) {
-        expressionTokens.value = ['無法除以 0']
-        hasCalculationError.value = true
+        expressionTokens.value = [String(Number(result.toFixed(10)))]
         isCalculating.value = false
         return
       }
 
-      result /= operand
+      result = roundUpToOneDecimal(result / operand)
     }
   }
 
@@ -193,9 +178,7 @@ const confirmInput = () => {
     return
   }
 
-  if (!hasCalculationError.value) {
-    emit('save', Number(expressionTokens.value[0]))
-  }
+  emit('save', Number(expressionTokens.value[0]))
 }
 </script>
 

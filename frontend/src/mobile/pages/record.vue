@@ -39,6 +39,14 @@
       @cancel="isDeleteConfirmOpen = false"
       @confirm="confirmDeleteRecord"
     />
+    <ConfirmDialog
+      :open="isAmountErrorDialogOpen"
+      message="金額不能有小數點。"
+      confirm-text="確定"
+      :show-cancel="false"
+      @cancel="isAmountErrorDialogOpen = false"
+      @confirm="isAmountErrorDialogOpen = false"
+    />
   </div>
 </template>
 
@@ -67,6 +75,7 @@
   const isAutomatic = ref(false)
   const occurredAt = ref('')
   const isDeleteConfirmOpen = ref(false)
+  const isAmountErrorDialogOpen = ref(false)
   const isDeleting = ref(false)
   const calculatorKey = computed(() => (
     `record-${String(route.query.recordId ?? '')}`
@@ -169,6 +178,11 @@
   }, { immediate: true })
 
   const saveRecord = (recordAmount: number) => {
+    if (!Number.isInteger(recordAmount)) {
+      isAmountErrorDialogOpen.value = true
+      return
+    }
+
     if (categoryId.value === null) {
       redirectToHomepage(occurredAt.value)
       return
