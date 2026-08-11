@@ -27,7 +27,7 @@
       <button class="number" @click="inputNumber('0')">0</button>
       <button @click="confirmInput">
         <Equal v-if="isCalculating" />
-        <b v-else>儲存</b>
+        <span v-else class="save-icon"><Check /></span>
       </button>
       <button class="divide" @click="inputOperator('÷')"><Divide /></button>
 
@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import DateSelector from '@/mobile/components/record/DateSelector.vue'
-import { Plus, Minus, X, Divide, Equal, Delete } from '@lucide/vue'
+import { Plus, Minus, X, Divide, Equal, Delete, Check } from '@lucide/vue'
 
 type Operator = '+' | '-' | '×' | '÷'
 
@@ -238,6 +238,22 @@ const confirmInput = () => {
         flex-wrap: wrap;
         >button{
           width: calc((100% - ($gap * 3))/4);
+          @include flexbox(row, center, center);
+          &:nth-of-type(4n+4),
+          &:nth-last-of-type(4){
+            background-color: rgba($color: $white, $alpha: .6);
+          }
+          >.save-icon{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid $black;
+            background-color: $yellow;
+            @include flexbox(row, center, center);
+            >svg{
+              width: 80%;
+            }
+          }
           &:nth-of-type(4n+1){
 
           }
