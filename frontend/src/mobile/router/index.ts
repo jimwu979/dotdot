@@ -93,7 +93,17 @@ export default createRouter({
     {
       path: '/mobile/statistics',
       name: 'statistics',
-      component: () => import('@/mobile/pages/statistics.vue'),
+      component: () => import('@/mobile/pages/statistics/index.vue'),
+    },
+    {
+      path: '/mobile/statistics/:year(\\d{4})/:month(0[1-9]|1[0-2])',
+      name: 'statistics-month',
+      component: () => import('@/mobile/pages/statistics/month.vue'),
+    },
+    {
+      path: '/mobile/statistics/:year(\\d{4})/:month(0[1-9]|1[0-2])/:kind(income|expense)/:categoryId(\\d+)',
+      name: 'statistics-category',
+      component: () => import('@/mobile/pages/statistics/category.vue'),
     },
     {
       path: '/mobile/record',

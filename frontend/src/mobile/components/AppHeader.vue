@@ -5,8 +5,9 @@
       <PrevPage v-if="false" />
     </section>
     <section class="center">
-      <MonthSelector v-if="true" />
-      <Title v-if="false" />
+      <slot name="center">
+        <MonthSelector />
+      </slot>
     </section>
     <section class="right">
       <button
@@ -35,7 +36,6 @@
 <script lang="ts" setup>
   import { onBeforeUnmount, onMounted, ref } from 'vue'
   import { ArrowDown, Trash } from '@lucide/vue'
-  import Title         from '@/mobile/components/childComponents/appHeader/Title.vue'
   import NavBox        from '@/mobile/components/childComponents/appHeader/NavBox.vue'
   import PrevPage      from '@/mobile/components/childComponents/appHeader/PrevPage.vue'
   import MonthSelector from '@/mobile/components/childComponents/appHeader/MonthSelector.vue'
