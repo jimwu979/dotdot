@@ -218,8 +218,8 @@
         > span {
           display: block;
           font-size: 12px;
-          color: rgba(255, 255, 255, .58);
           transition: color .2s;
+          color: rgba(255, 255, 255, .58);
           &::before {
             width: 7px;
             height: 7px;
@@ -283,8 +283,8 @@
       border-bottom: 1px solid $oat;
       @include flexbox(row, flex-start, center);
       > strong {
-        color: $grey-light;
         display: block;
+        color: $grey-light;
       }
     }
     > .category-list {
@@ -322,8 +322,8 @@
           > .category-progress {
             width: 100%;
             height: 4px;
-            overflow: hidden;
             margin-top: 4px;
+            overflow: hidden;
             border-radius: 99px;
             background-color: $oat;
             > span {
@@ -347,9 +347,9 @@
     }
     > .empty-state {
       color: $grey;
+      font-size: 13px;
       padding: 30px 14px;
       text-align: center;
-      font-size: 13px;
     }
   }
 }

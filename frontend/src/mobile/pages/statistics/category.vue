@@ -175,8 +175,8 @@
         font-size: 12px;
       }
       > h1 {
-        font-size: 24px;
         margin: 2px 0;
+        font-size: 24px;
       }
     }
     > strong {
@@ -212,8 +212,8 @@
         > .category-icon {
           width: 32px;
           flex: 0 0 auto;
-          position: relative;
           aspect-ratio: 1/1;
+          position: relative;
           border-radius: 50%;
           @include flexbox(row, center, center);
           > svg {
@@ -222,10 +222,10 @@
           }
           > .status {
             right: -4px;
-            bottom: -4px;
             width: 18px;
-            position: absolute;
+            bottom: -4px;
             aspect-ratio: 1/1;
+            position: absolute;
             border-radius: 50%;
             background-color: $yellow;
             @include flexbox(row, center, center);
@@ -247,10 +247,10 @@
               font-size: 16px;
             }
             > b {
-              color: $mustard;
               flex: 0 0 auto;
-              font-size: 12px;
               line-height: 1;
+              color: $mustard;
+              font-size: 12px;
               padding: 2px 4px;
               margin-left: 8px;
               border-radius: 4px;
@@ -265,8 +265,8 @@
               flex: 1;
               color: $grey;
               min-width: 0;
-              overflow: hidden;
               font-size: 12px;
+              overflow: hidden;
               margin-left: 8px;
               white-space: nowrap;
               text-overflow: ellipsis;
@@ -309,9 +309,9 @@
     }
     > .empty-state {
       color: $grey;
+      font-size: 13px;
       padding: 40px 14px;
       text-align: center;
-      font-size: 13px;
     }
   }
 }

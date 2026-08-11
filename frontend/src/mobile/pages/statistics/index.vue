@@ -145,9 +145,9 @@
         width: 7px;
         height: 7px;
         justify-self: end;
+        transform: rotate(45deg);
         border-top: 2px solid $grey-light;
         border-right: 2px solid $grey-light;
-        transform: rotate(45deg);
       }
       ~ a {
         border-top: 1px solid $oat;

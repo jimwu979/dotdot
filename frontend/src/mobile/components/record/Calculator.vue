@@ -201,12 +201,12 @@ const confirmInput = () => {
 
 <style scoped lang="scss">
   .component.calculator{
-    padding: 1px;
-    background-color: $oat;
-    position: fixed;
-    bottom: $header_height;
     left: 0;
     width: 100%;
+    padding: 1px;
+    position: fixed;
+    bottom: $header_height;
+    background-color: $oat;
     @include flexbox(column, flex-start, stretch);
     $gap: 1px;
     gap: $gap;
@@ -214,8 +214,8 @@ const confirmInput = () => {
       gap: $gap;
       @include flexbox(row, flex-start, flex-start);
       >*{
-        @include h2();
         height: 60px;
+        @include h2();
         background-color: $white;
         >b{
           @include h3();
@@ -227,8 +227,8 @@ const confirmInput = () => {
           padding: 22px;
           overflow-x: auto;
           white-space: nowrap;
-          width: calc(((100% - ($gap * 3))/4) * 3 + ($gap * 2));
           @include flexbox(row, flex-end, center);
+          width: calc(((100% - ($gap * 3))/4) * 3 + ($gap * 2));
         }
         >button{
           width: calc((100% - ($gap * 3))/4);
