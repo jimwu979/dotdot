@@ -158,6 +158,7 @@
   import type { CategoryIconName } from '@/shared/icons/category'
   import { useCategoryStore } from '@/shared/stores/category'
   import { useRecordStore } from '@/shared/stores/record'
+  import { formatAmount } from '@/shared/utils/formatAmount'
   import {
     useSavingsStore,
     type SavingsTransactionType,
@@ -288,8 +289,6 @@
   )
   const totalSavings = computed(() => manualTotal.value + totalMonthlyBalance.value)
 
-  const formatAmount = (amount: number) =>
-    String(Math.trunc(amount)).replace(/\B(?=(\d{4})+(?!\d))/g, ',')
   const formatSignedAmount = (amount: number) => {
     const sign = amount > 0 ? '+' : ''
 

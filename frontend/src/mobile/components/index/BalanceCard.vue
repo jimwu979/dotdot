@@ -43,6 +43,7 @@
 <script lang="ts" setup>
   import { computed } from 'vue'
   import { useRoute } from 'vue-router'
+  import { formatAmount } from '@/shared/utils/formatAmount'
 
   const props = defineProps<{
     totalIncome: number
@@ -100,8 +101,6 @@
 
     return ''
   })
-  const formatAmount = (amount: number) =>
-    String(Math.trunc(amount)).replace(/\B(?=(\d{4})+(?!\d))/g, ',')
 </script>
 
 <style lang="scss" scoped>
