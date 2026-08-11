@@ -1,8 +1,8 @@
 <template>
   <div class="component calculator">
     <section class="head">
-      <button type="button" @click="openDateSelector" v-text="displayDate" />
       <div v-text="displayValue" />
+      <button type="button" @click="openDateSelector" v-text="displayDate" />
     </section>
     <section class="keyboard">
 
@@ -222,16 +222,16 @@ const confirmInput = () => {
         }
       }
       &.head{
-        >button{
-          width: calc((100% - ($gap * 3))/4);
-        }
         >div{
           @include h2();
-          padding: 12px;
+          padding: 22px;
           overflow-x: auto;
           white-space: nowrap;
           width: calc(((100% - ($gap * 3))/4) * 3 + ($gap * 2));
           @include flexbox(row, flex-end, center);
+        }
+        >button{
+          width: calc((100% - ($gap * 3))/4);
         }
       }
       &.keyboard{
