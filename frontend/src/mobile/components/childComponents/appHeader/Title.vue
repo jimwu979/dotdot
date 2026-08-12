@@ -1,11 +1,17 @@
 <template>
   <h2
     class="component title"
-    v-text="'記帳'"
+    v-text="text"
     @dblclick.prevent
     @touchend.prevent
   />
 </template>
+
+<script lang="ts" setup>
+  defineProps<{
+    text: string
+  }>()
+</script>
 
 <style lang="scss" scoped>
 .component.title{

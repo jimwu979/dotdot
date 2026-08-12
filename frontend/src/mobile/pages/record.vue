@@ -28,6 +28,7 @@
       @save="saveRecord"
     />
     <AppHeader
+      title="記帳"
       :right-action="recordId !== null ? 'delete' : undefined"
       @delete="isDeleteConfirmOpen = true"
     />

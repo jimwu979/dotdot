@@ -87,6 +87,7 @@
     </form>
 
     <AppHeader
+      title="存款"
       :right-action="transactionId !== null ? 'delete' : undefined"
       @delete="isDeleteConfirmOpen = true"
     />

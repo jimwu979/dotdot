@@ -7,7 +7,7 @@
         { url: '', text: '姓名' },
       ]"
     />
-    <AppHeader />
+    <AppHeader title="設定" />
     <section>
       <h1>帳號</h1>
 

@@ -47,7 +47,7 @@
         </router-link>
       </div>
     </section>
-    <AppHeader />
+    <AppHeader title="設定" />
   </main>
 </template>
 

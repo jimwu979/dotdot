@@ -85,6 +85,7 @@
 
     </main>
     <AppHeader
+      title="設定"
       :right-action="categoryId !== null ? 'delete' : undefined"
       @delete="isDeleteConfirmOpen = true"
     />

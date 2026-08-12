@@ -87,6 +87,7 @@
 
     </main>
     <AppHeader
+      title="設定"
       :right-action="dotdotId !== null ? 'delete' : undefined"
       @delete="isDeleteConfirmOpen = true"
     />

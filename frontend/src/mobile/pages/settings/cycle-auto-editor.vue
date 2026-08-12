@@ -102,6 +102,7 @@
       </div>
     </main>
     <AppHeader
+      title="設定"
       :right-action="automaticId !== null ? 'delete' : undefined"
       @delete="isDeleteConfirmOpen = true"
     />

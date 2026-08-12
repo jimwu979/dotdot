@@ -66,7 +66,7 @@
       aria-label="新增存款收支"
     />
 
-    <AppHeader right-action="scroll" />
+    <AppHeader title="存款" right-action="scroll" />
   </main>
 </template>
 

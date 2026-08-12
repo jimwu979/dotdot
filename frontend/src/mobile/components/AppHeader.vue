@@ -1,12 +1,13 @@
 <template>
   <header class="component appHeader">
     <section class="left">
-      <NavBox v-if="true" />
-      <PrevPage v-if="false" />
+      <NavBox v-if="showMenu" />
+      <PrevPage v-else />
     </section>
     <section class="center">
       <slot name="center">
-        <MonthSelector />
+        <Title v-if="title" :text="title" />
+        <MonthSelector v-else />
       </slot>
     </section>
     <section class="right">
@@ -34,13 +35,22 @@
 </template>
 
 <script lang="ts" setup>
-  import { onBeforeUnmount, onMounted, ref } from 'vue'
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { useRoute } from 'vue-router'
   import { ArrowDown, Trash } from '@lucide/vue'
   import NavBox        from '@/mobile/components/childComponents/appHeader/NavBox.vue'
   import PrevPage      from '@/mobile/components/childComponents/appHeader/PrevPage.vue'
+  import Title         from '@/mobile/components/childComponents/appHeader/Title.vue'
   import MonthSelector from '@/mobile/components/childComponents/appHeader/MonthSelector.vue'
 
+  const route = useRoute()
+  const menuRouteNames = ['index', 'statistics', 'settings', 'saving']
+  const showMenu = computed(() => (
+    typeof route.name === 'string' && menuRouteNames.includes(route.name)
+  ))
+
   const props = defineProps<{
+    title?: string
     rightAction?: 'scroll' | 'delete'
   }>()
 
