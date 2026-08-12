@@ -39,7 +39,7 @@
               :amount="Math.abs(item.signedAmount)"
             />
           </RouterLink>
-          <div class="transaction-item" >
+          <div class="transaction-item auto-calculate" >
             <Transaction
               icon="Sparkles"
               :color="categoryColors.amber"
@@ -285,7 +285,7 @@
           &.editable {
             cursor: pointer;
           }
-          &:nth-last-of-type(1){
+          &.auto-calculate{
             padding: 0 12px;
             margin-left: -12px;
             margin-right: -12px;
