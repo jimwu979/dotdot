@@ -17,9 +17,13 @@
       <div class="options" @click.stop>
         <button type="button" class="now" @click="goToNow">NOW</button>
         <div class="year">
-          <button type="button" class="prev" @click="browseYear--" />
+          <button type="button" class="prev" @click="browseYear--">
+            <ChevronLeft />
+          </button>
           <h6 v-text="browseYear" />
-          <button type="button" class="next" @click="browseYear++" />
+          <button type="button" class="next" @click="browseYear++">
+            <ChevronRight />
+          </button>
         </div>
         <CloseBtn @click="isOpen = false" />
       </div>
@@ -48,6 +52,7 @@
 <script lang="ts" setup>
   import { computed, ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
+  import { ChevronLeft, ChevronRight } from '@lucide/vue'
   import CloseBtn from '@/mobile/components/closeBtn.vue'
 
   const route = useRoute()
@@ -120,36 +125,33 @@
     touch-action: manipulation;
     @include flexbox(row, center, center);
     >button{
+      width: 42px;
       height: 100%;
-      padding: 8px;
+      position: relative;
       touch-action: manipulation;
-      >img{
-        width: 16px;
+      &::before{
+        top: 50%;
+        left: 50%;
+        width: 9px;
+        height: 9px;
+        content: '';
+        position: absolute;
+        border-left: 2px solid $black;
+        border-bottom: 2px solid $black;
       }
-      &:nth-of-type(odd){
-        &:before{
-          width: 12px;
-          content: '';
-          aspect-ratio: 16/9;
-          display: inline-block;
-          background-image: url('/arrow_fill_black.png');
-        }
-      }
-      &:nth-of-type(1){
-        padding-right: 18px;
-        &:before{
-          transform: rotateZ(-90deg);
-        }
+      &:first-of-type::before{
+        transform: translate(-30%, -50%) rotate(45deg);
       }
       &:nth-of-type(2){
+        min-width: 70px;
         @include h2();
         font-weight: 600;
-      }
-      &:nth-of-type(3){
-        padding-left: 18px;
-        &:before{
-          transform: rotateZ(90deg);
+        &::before{
+          content: none;
         }
+      }
+      &:last-of-type::before{
+        transform: translate(-70%, -50%) rotate(225deg);
       }
     }
   }
@@ -188,29 +190,23 @@
         background-color: #EEE;
       }
       >.year{
+        height: 32px;
         @include flexbox(row, center, center);
         >h6{
+          height: 100%;
+          min-width: 60px;
           @include h3();
+          @include flexbox(row, center, center);
         }
         >button{
-          &:before{
+          width: 42px;
+          height: 100%;
+          @include flexbox(row, center, center);
+          >svg{
             width: 16px;
-            content: '';
-            aspect-ratio: 16/9;
-            display: inline-block;
-            background-image: url('/arrow_line_black.png');
-          }
-          &.prev{
-            padding-right: 18px;
-            &:before{
-              transform: rotateZ(-90deg);
-            }
-          }
-          &.next{
-            padding-left: 18px;
-            &:before{
-              transform: rotateZ(90deg);
-            }
+            height: 16px;
+            display: block;
+            stroke: $black;
           }
         }
       }

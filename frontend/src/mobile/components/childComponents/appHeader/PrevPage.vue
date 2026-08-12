@@ -4,11 +4,15 @@
     class="component prevPage"
     aria-label="返回上一頁"
     @click="goBack"
-  />
+  >
+    <ChevronLeft />
+  </button>
 </template>
 
 <script lang="ts" setup>
+  import { ChevronLeft } from '@lucide/vue'
   import { useRouter } from 'vue-router'
+
   const router = useRouter()
   const goBack = () => {
     router.back()
@@ -21,10 +25,10 @@
   height: 100%;
   aspect-ratio: 1/1;
   border-radius: 8px;
-  display: inline-block;
-  background-size: 20px;
-  transform: rotateZ(-90deg);
-  background-repeat: no-repeat;
-  background-image: url('/arrow_line_black.png');
+  @include flexbox(row, center, center);
+  >svg{
+    width: 20px;
+    stroke: $black;
+  }
 }
 </style>

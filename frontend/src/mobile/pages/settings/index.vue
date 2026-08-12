@@ -44,7 +44,7 @@
           }"
         >
           <h3>{{ n.label }}</h3>
-          <img src="/arrow_line_black.png">
+          <ChevronRight />
         </router-link>
       </div>
     </section>
@@ -53,7 +53,8 @@
 </template>
 
 <script lang="ts" setup>
-import AppHeader from '@/mobile/components/AppHeader.vue'
+  import { ChevronRight } from '@lucide/vue'
+  import AppHeader from '@/mobile/components/AppHeader.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -85,10 +86,10 @@ import AppHeader from '@/mobile/components/AppHeader.vue'
         >h3{
 
         }
-        >img{
+        >svg{
           width: 12px;
           opacity: .4;
-          transform: rotateZ(90deg);
+          stroke: $black;
         }
         ~ a {
           border-top: 1px solid $oat;
