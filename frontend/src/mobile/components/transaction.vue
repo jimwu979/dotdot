@@ -25,8 +25,8 @@
     <p v-text="note" />
 
     <!-- 金額 -->
-    <strong :class="{'isNotExpense': !isExpense}">
-      {{ isExpense ? '' : '+' }}{{ amount }}
+    <strong :class="{ 'isNotExpense': !isExpense && !isNeutral }">
+      {{ isExpense || isNeutral ? '' : '+' }}{{ amount }}
     </strong>
 
   </div>
@@ -49,6 +49,7 @@
     note: string
     amount: number
     status?: 'automatic'
+    isNeutral?: boolean
   }>()
 
   const iconComponent = computed(() => {

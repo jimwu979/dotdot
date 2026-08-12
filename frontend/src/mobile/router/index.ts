@@ -112,9 +112,14 @@ export default createRouter({
     },
     ...settingRoutes,
     {
-      path: '/mobile/savings',
-      name: 'savings',
-      component: () => import('@/mobile/pages/savings.vue'),
+      path: '/mobile/saving',
+      name: 'saving',
+      component: () => import('@/mobile/pages/saving.vue'),
+    },
+    {
+      path: '/mobile/saveing-edit',
+      name: 'saveing-edit',
+      component: () => import('@/mobile/pages/saveing-edit.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

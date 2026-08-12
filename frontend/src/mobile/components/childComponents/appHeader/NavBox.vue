@@ -9,7 +9,7 @@
       <router-link :to="indexRoute">記帳</router-link>
       <router-link :to="{ name: 'statistics' }">統計</router-link>
       <router-link :to="{ name: 'settings' }">設定</router-link>
-      <router-link :to="{ name: 'savings' }">存款</router-link>
+      <router-link :to="{ name: 'saving' }">存款</router-link>
     </nav>
   </div>
 </template>
