@@ -1,5 +1,6 @@
 <template>
   <main class="page settings">
+    <h1>設定</h1>
     <section
       v-for="(i, index) in [
         {
@@ -59,6 +60,9 @@ import AppHeader from '@/mobile/components/AppHeader.vue'
 .page.settings{
   gap: 12px;
   @include flexbox(column, flex-start, stretch);
+  >h1{
+    @include h1();
+  }
   >section{
     gap: 12px;
     border-radius: 8px;
