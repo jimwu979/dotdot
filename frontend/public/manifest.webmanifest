@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "DotDot 記帳",
-  "short_name": "DotDot",
+  "name": "點點記帳",
+  "short_name": "點點記帳",
   "description": "簡單快速的個人記帳工具",
   "lang": "zh-TW",
   "start_url": "/",
