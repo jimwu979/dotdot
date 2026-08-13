@@ -7,14 +7,15 @@
         :class="{ checked: selectedTagIds.includes(tag.id) }"
       >
         <button
+          class="btn-click-effect"
           type="button"
           @click="toggleTag(tag.id)"
         >
           {{ tag.name }}
-          <b>
-            <Check />
-          </b>
         </button>
+        <b>
+          <Check />
+        </b>
       </li>
     </ul>
     <p v-else>此類別尚無標籤</p>
@@ -58,6 +59,7 @@
       flex-wrap: wrap;
       @include flexbox(row, flex-start, flex-start);
       >li{
+        position: relative;
         >button{
           gap: 6px;
           color: $mustard;
@@ -68,30 +70,29 @@
           border: 1px solid $stone;
           background-color: $white;
           @include flexbox(row, center, center);
-          >b{
-            width: 20px;
-            aspect-ratio: 1/1;
-            opacity: 0;
-            position: absolute;
-            right: -8px;
-            bottom: -8px;
-            aspect-ratio: 1/1;
-            border-radius: 50%;
-            transition: opacity .2s;
-            background-color: $yellow;
-            @include flexbox(row, center, center);
-            >svg{
-              height: 70%;
-              stroke: $black;
-            }
+        }
+        >b{
+          width: 20px;
+          opacity: 0;
+          right: -8px;
+          bottom: -8px;
+          position: absolute;
+          aspect-ratio: 1/1;
+          border-radius: 50%;
+          transition: opacity .2s;
+          background-color: $yellow;
+          @include flexbox(row, center, center);
+          >svg{
+            height: 70%;
+            stroke: $black;
           }
         }
         &.checked{
           >button{
             background-color: $oat;
-            >b{
-              opacity: 1;
-            }
+          }
+          >b{
+            opacity: 1;
           }
         }
       }

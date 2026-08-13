@@ -331,6 +331,7 @@ const startCategoryDrag = (event: PointerEvent, categoryId: number) => {
         }
         >.btn{
           width: 40px;
+          height: 100%;
           @include flexbox(row, center, center);
           >svg{
             width: 20px;

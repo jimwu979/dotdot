@@ -196,6 +196,9 @@ const confirmInput = () => {
     >section{
       gap: $gap;
       @include flexbox(row, flex-start, flex-start);
+      >button{
+        border-radius: 0;
+      }
       >*{
         height: 60px;
         @include h2();
@@ -222,9 +225,12 @@ const confirmInput = () => {
         >button{
           width: calc((100% - ($gap * 3))/4);
           @include flexbox(row, center, center);
-          &:nth-of-type(4n+4),
-          &:nth-last-of-type(4){
-            background-color: rgba($color: $white, $alpha: .6);
+          &.plus,
+          &.minus,
+          &.delete,
+          &.divide,
+          &.multiply{
+            background-color: #f7f6f1;
           }
           >.save-icon{
             width: 30px;

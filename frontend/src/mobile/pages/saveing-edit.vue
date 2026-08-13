@@ -297,7 +297,8 @@
       }
       > .month-selector {
         width: 100%;
-        padding: 7px 8px;
+        padding: 0;
+        overflow: hidden;
         border-radius: 8px;
         border: 1px solid $oat;
         background-color: $background;
@@ -307,11 +308,10 @@
           font-weight: 600;
         }
         > button {
-          width: 32px;
-          aspect-ratio: 1/1;
+          width: 48px;
+          height: 46px;
           position: relative;
-          border-radius: 6px;
-          background-color: $white;
+          border-radius: 0;
           &::before {
             top: 50%;
             left: 50%;
