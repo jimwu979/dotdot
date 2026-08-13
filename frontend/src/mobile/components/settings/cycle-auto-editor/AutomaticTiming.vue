@@ -4,6 +4,7 @@
       <b>頻率</b>
       <div>
         <button
+          class="btn-click-effect"
           v-for="option in frequencyOptions"
           :key="option.value"
           type="button"
@@ -22,6 +23,7 @@
     >
       <div>
         <button
+          class="btn-click-effect"
           v-for="weekday in weekdays"
           :key="weekday.value"
           type="button"
@@ -55,6 +57,7 @@
     <section class="time">
       <b>時間</b>
       <button
+        class="btn-click-effect"
         type="button"
         @click="openTimeSelector"
       >
@@ -81,6 +84,7 @@
             @pointercancel="endWheelInteraction('hour')"
           >
             <button
+              class="btn-click-effect"
               v-for="(hour, index) in hourOptions"
               :key="hour"
               type="button"
@@ -98,6 +102,7 @@
             @pointercancel="endWheelInteraction('minute')"
           >
             <button
+              class="btn-click-effect"
               v-for="(minute, index) in minuteOptions"
               :key="minute"
               type="button"
@@ -115,6 +120,7 @@
             @pointercancel="endWheelInteraction('period')"
           >
             <button
+              class="btn-click-effect"
               v-for="(period, index) in periodOptions"
               :key="period.value"
               type="button"

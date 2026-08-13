@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="component prevPage"
+    class="component prevPage btn-click-effect"
     @click="goBack"
   >
     <ChevronLeft />

@@ -1,6 +1,7 @@
 <template>
   <div class="component category">
     <button
+      class="btn-click-effect"
       type="button"
       @click="toggleCategorySelector"
     >
@@ -24,6 +25,7 @@
       <ul>
         <li :class="{ now: !isExpense }">
           <button
+            class="btn-click-effect"
             type="button"
             @click="isExpense = false"
             v-text="'收入'"
@@ -31,6 +33,7 @@
         </li>
         <li :class="{ now: isExpense }">
           <button
+            class="btn-click-effect"
             type="button"
             @click="isExpense = true"
             v-text="'支出'"
@@ -39,6 +42,7 @@
       </ul>
       <div>
         <button
+          class="btn-click-effect"
           v-for="category in filteredCategoryList"
           :key="category.id"
           type="button"

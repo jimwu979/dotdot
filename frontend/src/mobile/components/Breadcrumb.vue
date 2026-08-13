@@ -1,7 +1,8 @@
 <template>
   <nav class="component breadcrumb">
     <template v-for="(item, index) in items" :key="index">
-      <router-link :to="item.url">
+      <span v-if="index > 0">/</span>
+      <router-link class="btn-click-effect" :to="item.url">
         {{ item.text }}
       </router-link>
     </template>
@@ -25,24 +26,17 @@ defineProps<{
     text-underline-offset: 3px;
     text-decoration-color: $brown;
     text-decoration-line: underline;
-    ~a{
-      margin-left: 20px;
-      position: relative;
-      &:before{
-        left: -20px;
-        width: 20px;
-        content: '/';
-        @include h3();
-        position: absolute;
-        text-align: center;
-        display: inline-block;
-      }
-    }
     &:nth-last-of-type(1){
       color: $grey;
       pointer-events: none;
       text-decoration-line: none;
     }
+  }
+  >span{
+    width: 20px;
+    @include h3();
+    text-align: center;
+    display: inline-block;
   }
 }
 </style>

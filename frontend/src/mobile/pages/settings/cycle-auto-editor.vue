@@ -67,6 +67,7 @@
         :require="true"
       >
         <button
+          class="btn-click-effect"
           type="button"
           :class="['disable-automatic', { checked: !automaticData.enabled }]"
           @click="automaticData.enabled = !automaticData.enabled"

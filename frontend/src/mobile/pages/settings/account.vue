@@ -54,7 +54,7 @@
         </p>
       </div>
 
-      <button type="button" @click="submit">確認</button>
+      <button class="btn-click-effect" type="button" @click="submit">確認</button>
     </section>
   </main>
 </template>

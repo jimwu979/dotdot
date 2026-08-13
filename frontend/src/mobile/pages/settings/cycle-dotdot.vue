@@ -37,7 +37,7 @@
           />
           <div class="option">
             <button
-              class="display"
+              class="display btn-click-effect"
               type="button"
               @click="dotdotStore.toggleDotdotVisibility(i.id)"
             >
@@ -45,7 +45,7 @@
               <EyeOff v-else />
             </button>
             <router-link
-              class="edit"
+              class="edit btn-click-effect"
               :to="{
                 path: '/mobile/settings/cycle-dotdot-editor',
                 query: { dotdotId: i.id },
@@ -54,7 +54,7 @@
               <Pencil />
             </router-link>
             <button
-              class="drag"
+              class="drag btn-click-effect"
               type="button"
               @pointerdown="startDotdotDrag($event, i.id)"
             >
@@ -93,7 +93,7 @@
           />
           <div class="option">
             <button
-              class="display"
+              class="display btn-click-effect"
               type="button"
               @click="dotdotStore.toggleDotdotVisibility(i.id)"
             >
@@ -101,7 +101,7 @@
               <EyeOff v-else />
             </button>
             <router-link
-              class="edit"
+              class="edit btn-click-effect"
               :to="{
                 path: '/mobile/settings/cycle-dotdot-editor',
                 query: { dotdotId: i.id },
@@ -110,7 +110,7 @@
               <Pencil />
             </router-link>
             <button
-              class="drag"
+              class="drag btn-click-effect"
               type="button"
               @pointerdown="startDotdotDrag($event, i.id)"
             >
@@ -120,7 +120,7 @@
         </li>
       </TransitionGroup>
     </div>
-    <router-link to="/mobile/settings/cycle-dotdot-editor">添加</router-link>
+    <router-link class="btn-click-effect" to="/mobile/settings/cycle-dotdot-editor">添加</router-link>
     <Teleport to="body">
       <div
         v-if="dragPreviewDotdot"

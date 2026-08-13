@@ -23,7 +23,7 @@
         :data-automatic-id="item.id"
       >
         <button
-          class="drag"
+          class="drag btn-click-effect"
           type="button"
           @pointerdown="startAutomaticDrag($event, item.id)"
         >
@@ -69,7 +69,7 @@
               </div>
             </div>
             <router-link
-              class="edit"
+              class="edit btn-click-effect"
               :to="{
                 path: '/mobile/settings/cycle-auto-editor',
                 query: { automaticId: item.id },
@@ -147,7 +147,7 @@
       </div>
     </Teleport>
     <router-link
-      class="add"
+      class="add btn-click-effect"
       to="/mobile/settings/cycle-auto-editor"
     >
       <Plus />

@@ -2,34 +2,34 @@
   <div class="component calculator">
     <section class="head">
       <div v-text="displayValue" />
-      <button type="button" @click="openDateSelector" v-text="displayDate" />
+      <button class="btn-click-effect" type="button" @click="openDateSelector" v-text="displayDate" />
     </section>
     <section class="keyboard">
 
-      <button class="number" @click="inputNumber('7')" v-text="'7'" />
-      <button class="number" @click="inputNumber('8')" v-text="'8'" />
-      <button class="number" @click="inputNumber('9')" v-text="'9'" />
-      <button class="plus"   @click="inputOperator('+')"><Plus /></button>
+      <button class="number btn-click-effect" @click="inputNumber('7')" v-text="'7'" />
+      <button class="number btn-click-effect" @click="inputNumber('8')" v-text="'8'" />
+      <button class="number btn-click-effect" @click="inputNumber('9')" v-text="'9'" />
+      <button class="plus btn-click-effect"   @click="inputOperator('+')"><Plus /></button>
 
-      <button class="number" @click="inputNumber('4')" v-text="'4'" />
-      <button class="number" @click="inputNumber('5')" v-text="'5'" />
-      <button class="number" @click="inputNumber('6')" v-text="'6'" />
-      <button class="minus"  @click="inputOperator('-')"><Minus /></button>
+      <button class="number btn-click-effect" @click="inputNumber('4')" v-text="'4'" />
+      <button class="number btn-click-effect" @click="inputNumber('5')" v-text="'5'" />
+      <button class="number btn-click-effect" @click="inputNumber('6')" v-text="'6'" />
+      <button class="minus btn-click-effect"  @click="inputOperator('-')"><Minus /></button>
 
-      <button class="number"   @click="inputNumber('1')" v-text="'1'" />
-      <button class="number"   @click="inputNumber('2')" v-text="'2'" />
-      <button class="number"   @click="inputNumber('3')" v-text="'3'" />
-      <button class="multiply" @click="inputOperator('×')"><X /></button>
+      <button class="number btn-click-effect"   @click="inputNumber('1')" v-text="'1'" />
+      <button class="number btn-click-effect"   @click="inputNumber('2')" v-text="'2'" />
+      <button class="number btn-click-effect"   @click="inputNumber('3')" v-text="'3'" />
+      <button class="multiply btn-click-effect" @click="inputOperator('×')"><X /></button>
 
-      <button @click="deleteLastInput">
+      <button class="delete btn-click-effect" @click="deleteLastInput">
         <Delete />
       </button>
-      <button class="number" @click="inputNumber('0')">0</button>
-      <button @click="confirmInput">
+      <button class="number btn-click-effect" @click="inputNumber('0')">0</button>
+      <button class="btn-click-effect" @click="confirmInput">
         <Equal v-if="isCalculating" />
         <span v-else class="save-icon"><Check /></span>
       </button>
-      <button class="divide" @click="inputOperator('÷')"><Divide /></button>
+      <button class="divide btn-click-effect" @click="inputOperator('÷')"><Divide /></button>
 
     </section>
     <DateSelector

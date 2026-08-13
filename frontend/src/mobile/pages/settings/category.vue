@@ -9,11 +9,13 @@
     <main>
       <div>
         <button
+          class="btn-click-effect"
           :class="{ 'open': !isExpense }"
           @click="setIsExpense(false)"
           v-text="'收入'"
          />
         <button
+          class="btn-click-effect"
           :class="{ 'open': isExpense }"
           @click="setIsExpense(true)"
           v-text="'支出'"
@@ -36,7 +38,7 @@
           </div>
           <h6>{{ i.name }}</h6>
           <router-link
-            class="btn edit"
+            class="btn edit btn-click-effect"
             :to="{
               path: '/mobile/settings/category-editor',
               query: { id: i.id },
@@ -76,7 +78,7 @@
         </div>
       </Teleport>
       <router-link
-        class="add-category"
+        class="add-category btn-click-effect"
         :to="{
           path: '/mobile/settings/category-editor',
           query: { isExpense: String(isExpense) },

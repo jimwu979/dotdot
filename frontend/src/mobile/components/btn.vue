@@ -1,5 +1,6 @@
 <template>
   <button
+    class="btn-click-effect"
     type="button"
     :class="['component btn', type]"
   >

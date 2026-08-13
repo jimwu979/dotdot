@@ -2,26 +2,27 @@
   <div class="component monthSelector">
 
     <div class="title">
-      <button type="button" @click="changeMonth(-1)" />
+      <button class="btn-click-effect" type="button" @click="changeMonth(-1)" />
       <button
+        class="btn-click-effect"
         type="button"
         v-text="`${selectedMonth}月`"
         @click="toggleSelector"
       />
-      <button type="button" @click="changeMonth(1)" />
+      <button class="btn-click-effect" type="button" @click="changeMonth(1)" />
     </div>
 
     <div class="selector" :class="{'isOpen': isOpen}" @click="isOpen = false">
 
       <!-- options -->
       <div class="options" @click.stop>
-        <button type="button" class="now" @click="goToNow">NOW</button>
+        <button type="button" class="now btn-click-effect" @click="goToNow">NOW</button>
         <div class="year">
-          <button type="button" class="prev" @click="browseYear--">
+          <button type="button" class="prev btn-click-effect" @click="browseYear--">
             <ChevronLeft />
           </button>
           <h6 v-text="browseYear" />
-          <button type="button" class="next" @click="browseYear++">
+          <button type="button" class="next btn-click-effect" @click="browseYear++">
             <ChevronRight />
           </button>
         </div>

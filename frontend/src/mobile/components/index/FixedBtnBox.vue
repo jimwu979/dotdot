@@ -26,6 +26,7 @@
       <div>
         <template v-for="i in categoryList" :key="i.id">
           <router-link
+            class="btn-click-effect"
             v-if="i.isExpense === isExpense"
             :to="{
               path: '/mobile/record',

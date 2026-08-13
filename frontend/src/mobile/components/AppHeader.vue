@@ -12,17 +12,17 @@
     </section>
     <section class="right">
       <button
+        class="delete btn-click-effect"
         v-if="rightAction === 'delete'"
         type="button"
-        class="delete"
         @click="emit('delete')"
       >
         <Trash />
       </button>
       <button
+        class="scroll btn-click-effect"
         v-else-if="rightAction === 'scroll'"
         type="button"
-        class="scroll"
         :class="{ 'at-bottom': isAtBottom }"
         @click="togglePagePosition"
       >

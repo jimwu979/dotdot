@@ -6,6 +6,7 @@
         <label class="require">收支</label>
         <div class="type-selector">
           <button
+            class="btn-click-effect"
             type="button"
             :class="{ current: draft.type === 'income' }"
             @click="draft.type = 'income'"
@@ -13,6 +14,7 @@
             收入
           </button>
           <button
+            class="btn-click-effect"
             type="button"
             :class="{ current: draft.type === 'expense' }"
             @click="draft.type = 'expense'"
@@ -48,13 +50,13 @@
         <label class="require">月份</label>
         <div class="month-selector">
           <button
-            class="prev"
+            class="prev btn-click-effect"
             type="button"
             @click="changeDraftMonth(-1)"
           />
           <strong>{{ draftYear }} 年 {{ draftMonth }} 月</strong>
           <button
-            class="next"
+            class="next btn-click-effect"
             type="button"
             @click="changeDraftMonth(1)"
           />
@@ -79,7 +81,7 @@
         </p>
       </section>
 
-      <button class="save-button" type="submit">儲存</button>
+      <button class="save-button btn-click-effect" type="submit">儲存</button>
     </form>
 
     <AppHeader

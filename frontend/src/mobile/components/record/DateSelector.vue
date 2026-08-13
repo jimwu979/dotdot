@@ -13,11 +13,11 @@
 
       <!-- month -->
       <section class="month">
-        <button type="button" @click="changeMonth(-1)">
+        <button class="btn-click-effect" type="button" @click="changeMonth(-1)">
           <ChevronLeft />
         </button>
         <p v-text="displayMonth" />
-        <button type="button" @click="changeMonth(1)">
+        <button class="btn-click-effect" type="button" @click="changeMonth(1)">
           <ChevronRight />
         </button>
       </section>

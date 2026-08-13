@@ -11,6 +11,7 @@
           v-text="title"
         />
         <button
+          class="btn-click-effect"
           type="button"
           @click="emit('close')"
         >

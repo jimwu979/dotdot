@@ -8,6 +8,7 @@
       @selectstart.prevent
     >
       <button
+        class="btn-click-effect"
         v-for="tag in displayedTagList"
         :key="tag.id"
         type="button"
@@ -19,7 +20,7 @@
       </button>
       <button
         key="add-tag"
-        class="add-tag"
+        class="add-tag btn-click-effect"
         type="button"
         @click="openNewTagEditor"
       >
@@ -51,8 +52,8 @@
           >
         </label>
         <button
+          class="delete btn-click-effect"
           v-if="!isCreatingTag"
-          class="delete"
           @click="isDeleteConfirmOpen = true"
         >
           <Trash />

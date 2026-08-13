@@ -1,8 +1,8 @@
 <template>
   <div class="component statisticsPeriodSelector">
-    <button type="button" @click="changePeriod(-1)" />
+    <button class="btn-click-effect" type="button" @click="changePeriod(-1)" />
     <strong>{{ title }}</strong>
-    <button type="button" @click="changePeriod(1)" />
+    <button class="btn-click-effect" type="button" @click="changePeriod(1)" />
   </div>
 </template>
 
@@ -36,7 +36,6 @@
     ? `${selectedYear.value}年`
     : `${selectedMonth.value}月`,
   )
-
   const changePeriod = (offset: number) => {
     if (props.mode === 'year') {
       void router.push({
