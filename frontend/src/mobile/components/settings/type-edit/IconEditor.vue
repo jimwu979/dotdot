@@ -13,10 +13,12 @@
     <div class="icon">
       <label>icon</label>
       <button
+        class="btn-click-effect"
         type="button"
         @click="isIconSelectorOpen = true"
       >
         <component :is="selectedIcon" />
+        <ChevronDown class="selector-icon" />
       </button>
     </div>
 
@@ -24,10 +26,12 @@
     <div class="color">
       <label>顏色</label>
       <button
+        class="btn-click-effect"
         type="button"
         @click="isColorSelectorOpen = true"
       >
         <b :style="{backgroundColor: selectedColor}" />
+        <ChevronDown class="selector-icon" />
       </button>
     </div>
   </div>
@@ -73,7 +77,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Check } from '@lucide/vue'
+import { Check, ChevronDown } from '@lucide/vue'
 import Lightbox from '@/mobile/components/Lightbox.vue'
 import {
   categoryColors,
@@ -149,16 +153,10 @@ const selectCategoryColor = (colorId: CategoryColorId) => {
         padding-right: 18px;
         border: 1px solid $oat;
         @include flexbox(row, center, center);
-        &:after{
+        >.selector-icon{
+          width: 16px;
           right: 8px;
-          content: '';
           position: absolute;
-          top: calc(50% - 4px);
-          display: inline-block;
-          border-top: 8px solid $black;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 0px solid transparent;
         }
       }
     }

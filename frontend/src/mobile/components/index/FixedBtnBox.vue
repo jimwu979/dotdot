@@ -2,15 +2,20 @@
   <div class="fixed-btn-box">
     <!-- 按鈕 -->
     <button
-      class="assistant"
+      class="assistant btn-click-effect"
       type="button"
       @click.stop="toggleSelector('dotdot')"
-    />
+    >
+      <span />
+      <span />
+    </button>
     <button
-      :class="['add', { 'close-btn': selectorType !== '' }]"
+      :class="['add', 'btn-click-effect', { 'close-btn': selectorType !== '' }]"
       type="button"
       @click.stop="clickAddButton"
-    />
+    >
+      <Plus />
+    </button>
 
     <!-- 記帳類別選擇器 -->
     <section class="category-selector" :class="{'isOpen': selectorType === 'category'}">
@@ -40,7 +45,6 @@
     <section class="dotdot-selector" :class="{'isOpen': selectorType === 'dotdot'}">
       <div class="title">
         <h2>點點記帳</h2>
-        <button>編輯</button>
       </div>
       <div class="list fixed">
         <h5>釘選</h5>
@@ -87,6 +91,7 @@
 
 <script lang="ts" setup>
   import { computed, onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
+  import { Plus } from '@lucide/vue'
   import Transaction from '@/mobile/components/transaction.vue'
   import { categoryColors } from '@/shared/colors/category'
   import { categoryIcons } from '@/shared/icons/category'
@@ -230,39 +235,26 @@
       gap: 8px;
       background-color: $white;
       @include flexbox(row, center, center);
-      &::before,
-      &::after {
+      >span{
         width: 14px;
-        content: '';
         aspect-ratio: 1/1;
         border-radius: 50%;
         background-color: $black;
       }
     }
     &.add {
-      transition: .2s;
       background-color: $yellow;
-      &::before,
-      &::after {
-        top: 50%;
-        left: 50%;
-        content: '';
-        position: absolute;
-        border-radius: 99px;
-        background-color: $black;
-        transform: translate(-50%, -50%);
+      @include flexbox(row, center, center);
+      >svg{
+        transition: .2s;
+        transform-origin: center;
       }
-      &::before {
-        width: 22px;
-        height: 2px;
-      }
-      &::after {
-        width: 2px;
-        height: 22px;
-      }
-      &.close-btn{
+      &.close-btn >svg{
         transform: rotateZ(45deg);
       }
+    }
+    >svg{
+      width: 30px;
     }
   }
   >section{
@@ -350,14 +342,6 @@
         @include flexbox(row, space-between, center);
         >h2{
           @include h2();
-        }
-        >button{
-          color: $brown;
-          padding: 4px 20px;
-          border-radius: 8px;
-          letter-spacing: 1px;
-          border: 1px solid $oat;
-          background-color: $background;
         }
       }
       >.list{

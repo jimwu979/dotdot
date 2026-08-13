@@ -61,9 +61,11 @@
 
     <!-- 新增存款收支 -->
     <RouterLink
-      class="add-button"
+      class="add-button btn-click-effect"
       :to="{ name: 'saveing-edit' }"
-    />
+    >
+      <Plus />
+    </RouterLink>
 
     <AppHeader title="存款" right-action="scroll" />
   </main>
@@ -71,7 +73,7 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue'
-  import { PiggyBank } from '@lucide/vue'
+  import { PiggyBank, Plus } from '@lucide/vue'
   import AppHeader from '@/mobile/components/AppHeader.vue'
   import Transaction from '@/mobile/components/transaction.vue'
   import { categoryColors } from '@/shared/colors/category'
@@ -313,23 +315,9 @@
     background-color: $yellow;
     transition: transform .2s;
     box-shadow: 0 8px 22px rgba(42, 36, 24, .2);
-    &::before,
-    &::after {
-      top: 50%;
-      left: 50%;
-      content: '';
-      position: absolute;
-      border-radius: 99px;
-      background-color: $black;
-      transform: translate(-50%, -50%);
-    }
-    &::before {
-      width: 22px;
-      height: 2px;
-    }
-    &::after {
-      width: 2px;
-      height: 22px;
+    @include flexbox(row, center, center);
+    >svg{
+      width: 30px;
     }
   }
 }
