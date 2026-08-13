@@ -1,9 +1,9 @@
 <template>
   <div
     :class="['component dateSelector', { open }]"
-    @click="cancelSelection"
+    @click.self="cancelSelection"
   >
-    <div class="content" @click.stop>
+    <div class="content">
 
       <!-- head -->
       <section class="head">

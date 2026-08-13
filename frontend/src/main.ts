@@ -2,7 +2,10 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import categoryIcons from '@/shared/icons/category'
+import { useUiStore } from '@/shared/stores/ui'
 
+const pinia = createPinia()
+const uiStore = useUiStore(pinia)
 const isMobile = window.matchMedia('(max-width: 767px)').matches
 const routerModule = isMobile
   ? await import('@/mobile/router')
@@ -32,8 +35,12 @@ if (isMobile) {
   await import('@/desktop/assets/scss/main.scss')
 }
 
+document.body.addEventListener('click', () => {
+  uiStore.increaseClickTimes()
+})
+
 createApp(App)
-  .use(createPinia())
+  .use(pinia)
   .use(categoryIcons)
   .use(routerModule.default)
   .mount('#app')

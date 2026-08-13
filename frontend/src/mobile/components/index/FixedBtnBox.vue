@@ -4,7 +4,7 @@
     <button
       class="assistant btn-click-effect"
       type="button"
-      @click.stop="toggleSelector('dotdot')"
+      @click="toggleSelector('dotdot')"
     >
       <span />
       <span />
@@ -12,13 +12,17 @@
     <button
       :class="['add', 'btn-click-effect', { 'close-btn': selectorType !== '' }]"
       type="button"
-      @click.stop="clickAddButton"
+      @click="clickAddButton"
     >
       <Plus />
     </button>
 
     <!-- 記帳類別選擇器 -->
-    <section class="category-selector" :class="{'isOpen': selectorType === 'category'}">
+    <section
+      class="category-selector"
+      :class="{'isOpen': selectorType === 'category'}"
+      @click="markCurrentClick"
+    >
       <ul>
         <li :class="{'now': !isExpense}" @click="isExpense = false">收入</li>
         <li :class="{'now': isExpense}" @click="isExpense = true">支出</li>
@@ -43,7 +47,11 @@
     </section>
 
     <!-- 點點記帳 -->
-    <section class="dotdot-selector" :class="{'isOpen': selectorType === 'dotdot'}">
+    <section
+      class="dotdot-selector"
+      :class="{'isOpen': selectorType === 'dotdot'}"
+      @click="markCurrentClick"
+    >
       <div class="title">
         <h2>點點記帳</h2>
       </div>
@@ -96,6 +104,7 @@
   import { computed, onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
   import { Plus } from '@lucide/vue'
   import Transaction from '@/mobile/components/transaction.vue'
+  import { useCloseOnBodyClick } from '@/shared/composables/useCloseOnBodyClick'
   import { categoryColors } from '@/shared/colors/category'
   import { categoryIcons } from '@/shared/icons/category'
   import { useCategoryStore } from '@/shared/stores/category'
@@ -121,6 +130,10 @@
   type SelectorType = 'category' | 'dotdot' | ''
 
   const selectorType: Ref<SelectorType> = ref('')
+  const { markCurrentClick } = useCloseOnBodyClick(
+    () => selectorType.value !== '',
+    () => { selectorType.value = '' },
+  )
   let currentTimeTimer: number | undefined
 
   const categoryList = computed(() => (
@@ -212,11 +225,17 @@
   })
 
   const toggleSelector = (type: Exclude<SelectorType, ''>) => {
-    selectorType.value = selectorType.value === type ? '' : type
+    const nextSelectorType = selectorType.value === type ? '' : type
+
+    selectorType.value = nextSelectorType
+    if (nextSelectorType !== '') markCurrentClick()
   }
 
   const clickAddButton = () => {
-    selectorType.value = selectorType.value === '' ? 'category' : ''
+    const nextSelectorType = selectorType.value === '' ? 'category' : ''
+
+    selectorType.value = nextSelectorType
+    if (nextSelectorType !== '') markCurrentClick()
   }
 </script>
 

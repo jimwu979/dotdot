@@ -12,10 +12,10 @@
       <button class="btn-click-effect" type="button" @click="changeMonth(1)" />
     </div>
 
-    <div class="selector" :class="{'isOpen': isOpen}" @click="isOpen = false">
+    <div class="selector" :class="{'isOpen': isOpen}" @click.self="isOpen = false">
 
       <!-- options -->
-      <div class="options" @click.stop>
+      <div class="options" @click="markCurrentClick">
         <button type="button" class="now btn-click-effect" @click="goToNow">NOW</button>
         <div class="year">
           <button type="button" class="prev btn-click-effect" @click="browseYear--">
@@ -55,6 +55,7 @@
   import { useRoute, useRouter } from 'vue-router'
   import { ChevronLeft, ChevronRight } from '@lucide/vue'
   import CloseBtn from '@/mobile/components/closeBtn.vue'
+  import { useCloseOnBodyClick } from '@/shared/composables/useCloseOnBodyClick'
 
   const route = useRoute()
   const router = useRouter()
@@ -77,6 +78,10 @@
     getRouteNumber(route.params.month, now.getMonth() + 1, 1, 12),
   )
   const browseYear = ref(selectedYear.value)
+  const { markCurrentClick } = useCloseOnBodyClick(
+    () => isOpen.value,
+    () => { isOpen.value = false },
+  )
 
   const monthRoute = (year: number, month: number) => ({
     name: 'index',
@@ -87,8 +92,14 @@
   })
 
   const toggleSelector = () => {
-    if (!isOpen.value) browseYear.value = selectedYear.value
-    isOpen.value = !isOpen.value
+    const willOpen = !isOpen.value
+
+    if (willOpen) {
+      browseYear.value = selectedYear.value
+      markCurrentClick()
+    }
+
+    isOpen.value = willOpen
   }
 
   const changeMonth = (offset: number) => {

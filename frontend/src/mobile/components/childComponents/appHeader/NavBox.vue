@@ -1,11 +1,11 @@
 <template>
   <div class="component navBox" :class="{'open': isOpen}">
-    <button class="btn-click-effect" @click="isOpen = !isOpen">
+    <button class="btn-click-effect" @click="toggleMenu">
       <hr>
       <hr>
       <hr>
     </button>
-    <nav @click.stop="isOpen = false">
+    <nav @click="isOpen = false">
       <router-link class="btn-click-effect list-btn-click-effect" :to="indexRoute">記帳</router-link>
       <router-link class="btn-click-effect list-btn-click-effect" :to="{ name: 'statistics' }">統計</router-link>
       <router-link class="btn-click-effect list-btn-click-effect" :to="{ name: 'settings' }">設定</router-link>
@@ -16,6 +16,7 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue'
+  import { useCloseOnBodyClick } from '@/shared/composables/useCloseOnBodyClick'
 
   const date = new Date()
   const indexRoute = {
@@ -27,6 +28,17 @@
   }
 
   const isOpen = ref<boolean>(false)
+  const { markCurrentClick } = useCloseOnBodyClick(
+    () => isOpen.value,
+    () => { isOpen.value = false },
+  )
+
+  const toggleMenu = () => {
+    const willOpen = !isOpen.value
+
+    isOpen.value = willOpen
+    if (willOpen) markCurrentClick()
+  }
 </script>
 
 <style lang="scss" scoped>

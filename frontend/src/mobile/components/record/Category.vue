@@ -21,6 +21,7 @@
     <section
       class="category-selector"
       :class="{ 'open': isOpen }"
+      @click="markCurrentClick"
     >
       <ul>
         <li :class="{ now: !isExpense }">
@@ -65,6 +66,7 @@
   import { ChevronDown } from '@lucide/vue'
   import { categoryColors } from '@/shared/colors/category'
   import { categoryIcons } from '@/shared/icons/category'
+  import { useCloseOnBodyClick } from '@/shared/composables/useCloseOnBodyClick'
   import { useCategoryStore } from '@/shared/stores/category'
 
   const props = defineProps<{
@@ -77,6 +79,10 @@
 
   const categoryStore = useCategoryStore()
   const isOpen = ref(false)
+  const { markCurrentClick } = useCloseOnBodyClick(
+    () => isOpen.value,
+    () => { isOpen.value = false },
+  )
   const isExpense = ref(true)
   const selectedCategory = computed(() => (
     categoryStore.categoryList.find(category => category.id === props.categoryId)
@@ -102,7 +108,10 @@
   }, { immediate: true })
 
   const toggleCategorySelector = () => {
-    isOpen.value = !isOpen.value
+    const willOpen = !isOpen.value
+
+    isOpen.value = willOpen
+    if (willOpen) markCurrentClick()
   }
 
   const selectCategory = (categoryId: number) => {
