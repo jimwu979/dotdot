@@ -25,7 +25,7 @@
             :key="item.key"
             class="transaction-item editable btn-click-effect list-btn-click-effect"
             :to="{
-              name: 'saveing-edit',
+              name: 'saving-edit',
               query: { id: item.transactionId },
             }"
           >
@@ -62,7 +62,7 @@
     <!-- 新增存款收支 -->
     <RouterLink
       class="add-button btn-click-effect"
-      :to="{ name: 'saveing-edit' }"
+      :to="{ name: 'saving-edit' }"
     >
       <Plus />
     </RouterLink>

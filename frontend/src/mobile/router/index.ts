@@ -117,9 +117,9 @@ export default createRouter({
       component: () => import('@/mobile/pages/saving.vue'),
     },
     {
-      path: '/mobile/saveing-edit',
-      name: 'saveing-edit',
-      component: () => import('@/mobile/pages/saveing-edit.vue'),
+      path: '/mobile/saving-edit',
+      name: 'saving-edit',
+      component: () => import('@/mobile/pages/saving-edit.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

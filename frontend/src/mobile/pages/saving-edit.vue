@@ -1,5 +1,5 @@
 <template>
-  <main class="page saveing-edit">
+  <main class="page saving-edit">
     <h1>存款收支</h1>
     <form novalidate @submit.prevent="submitTransaction">
       <section class="form-field">
@@ -220,7 +220,7 @@
 </script>
 
 <style lang="scss" scoped>
-.page.saveing-edit {
+.page.saving-edit {
   padding-bottom: 140px;
   > h1 {
     @include h1();
