@@ -59,6 +59,10 @@ input{
   }
 }
 
+.list-btn-click-effect{
+  border-radius: 0;
+}
+
 @keyframes btn-click-effect{
   from{
     transform: translate(-50%, -50%) scale(0);

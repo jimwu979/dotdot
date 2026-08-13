@@ -42,6 +42,7 @@
       </div>
       <div v-if="categoryRecords.length > 0" class="record-list">
         <router-link
+          class="btn-click-effect list-btn-click-effect"
           v-for="record in categoryRecords"
           :key="record.id"
           :to="{
@@ -205,9 +206,10 @@
     }
     > .record-list {
       width: 100%;
-      padding: 8px;
+      padding: 8px 0;
       > a {
-        height: 68px;
+        height: 52px;
+        padding: 0 8px;
         @include flexbox(row, flex-start, center);
         > .category-icon {
           width: 32px;

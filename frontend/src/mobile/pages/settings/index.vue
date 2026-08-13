@@ -36,6 +36,7 @@
       <h2>{{ i.title }}</h2>
       <div>
         <router-link
+          class="btn-click-effect list-btn-click-effect"
           v-for="(n, n_index) in i.link"
           :key="n_index"
           :to="{
@@ -66,6 +67,7 @@
   }
   >section{
     gap: 12px;
+    overflow: hidden;
     border-radius: 8px;
     padding: 12px;
     border: 1px solid $stone;
@@ -79,9 +81,11 @@
       @include h3();
     }
     >div{
+      margin: 0 -12px -12px;
       @include flexbox(column, flex-start, stretch);
       >a{
-        height: 46px;
+        height: 52px;
+        padding: 0 12px;
         @include flexbox(row, space-between, center);
         >h3{
 

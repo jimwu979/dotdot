@@ -47,6 +47,7 @@
 
       <div v-if="group.items.length > 0" class="category-list">
         <router-link
+          class="btn-click-effect list-btn-click-effect"
           v-for="item in group.items"
           :key="item.category.id"
           :to="{
@@ -289,9 +290,10 @@
     }
     > .category-list {
       width: 100%;
-      padding: 8px;
+      padding: 8px 0;
       > a {
-        height: 46px;
+        height: 52px;
+        padding: 0 8px;
         @include flexbox(row, flex-start, center);
         > .category-icon {
           width: 32px;

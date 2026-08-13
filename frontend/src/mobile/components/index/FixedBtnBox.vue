@@ -53,6 +53,7 @@
           <li
             v-for="i in getDotdotList(true)"
             :key="i.id"
+            class="btn-click-effect list-btn-click-effect"
             @click="addDotdotRecord(i)"
           >
             <transaction
@@ -72,6 +73,7 @@
           <li
             v-for="i in getDotdotList(false)"
             :key="i.id"
+            class="btn-click-effect"
             @click="addDotdotRecord(i)"
           >
             <transaction
@@ -357,15 +359,26 @@
           @include flexbox(column, flex-start, stretch);
           >li{
             height: 46px;
+            padding: 0 8px;
             cursor: pointer;
             @include flexbox(row, center, center);
           }
         }
+        &:not(.fixed) >ul{
+          margin: 0 -12px;
+          >li{
+            padding: 0 12px;
+          }
+        }
         &.fixed{
+          overflow: hidden;
           padding: 12px 8px;
           border-radius: 12px;
           border: 1px solid $oat;
           background-color: $background;
+          >ul{
+            margin: 0 -8px;
+          }
         }
       }
     }

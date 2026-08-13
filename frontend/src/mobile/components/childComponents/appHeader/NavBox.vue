@@ -1,15 +1,15 @@
 <template>
   <div class="component navBox" :class="{'open': isOpen}">
-    <button @click="isOpen = !isOpen">
+    <button class="btn-click-effect" @click="isOpen = !isOpen">
       <hr>
       <hr>
       <hr>
     </button>
     <nav @click.stop="isOpen = false">
-      <router-link :to="indexRoute">記帳</router-link>
-      <router-link :to="{ name: 'statistics' }">統計</router-link>
-      <router-link :to="{ name: 'settings' }">設定</router-link>
-      <router-link :to="{ name: 'saving' }">存款</router-link>
+      <router-link class="btn-click-effect list-btn-click-effect" :to="indexRoute">記帳</router-link>
+      <router-link class="btn-click-effect list-btn-click-effect" :to="{ name: 'statistics' }">統計</router-link>
+      <router-link class="btn-click-effect list-btn-click-effect" :to="{ name: 'settings' }">設定</router-link>
+      <router-link class="btn-click-effect list-btn-click-effect" :to="{ name: 'saving' }">存款</router-link>
     </nav>
   </div>
 </template>
@@ -52,10 +52,10 @@
   }
   >nav{
     left: 0;
-    gap: 12px;
     opacity: 0;
     width: 220px;
-    padding: 12px;
+    padding: 10px 0;
+    overflow: hidden;
     transition: .2s;
     position: absolute;
     border-radius: 8px;
@@ -66,10 +66,12 @@
     @include flexbox(column, center, stretch);
     box-shadow: 0px 2px 8px rgba(0,0,0,.25);
     >a{
-      padding: 8px;
+      height: 50px;
+      padding: 0 20px;
       @include p();
       text-align: center;
       white-space: nowrap;
+      @include flexbox(row, center, center);
     }
   }
   &.open{

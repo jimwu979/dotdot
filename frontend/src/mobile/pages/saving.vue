@@ -23,7 +23,7 @@
           <RouterLink
             v-for="item in month.items"
             :key="item.key"
-            class="transaction-item editable"
+            class="transaction-item editable btn-click-effect list-btn-click-effect"
             :to="{
               name: 'saveing-edit',
               query: { id: item.transactionId },
@@ -279,18 +279,16 @@
       }
       > .list {
         width: 100%;
-        padding: 8px 8px 0;
+        padding: 8px 0 0;
         > .transaction-item {
-          height: 46px;
+          height: 52px;
           @include flexbox(row, flex-start, center);
           &.editable {
+            padding: 0 8px;
             cursor: pointer;
           }
           &.auto-calculate{
             padding: 0 12px;
-            margin-left: -12px;
-            margin-right: -12px;
-            width: calc(100% + 24px);
             @include flexbox(row, stretch, flex-start);
             background-color: rgba($color: $grey-light, $alpha: .15);
           }

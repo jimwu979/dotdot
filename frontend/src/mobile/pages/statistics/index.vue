@@ -13,6 +13,7 @@
         <span>結餘</span>
       </div>
       <router-link
+        class="btn-click-effect list-btn-click-effect"
         v-for="item in monthlyStatistics"
         :key="item.month"
         :to="{
