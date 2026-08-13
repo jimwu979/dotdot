@@ -63,6 +63,13 @@ input{
   border-radius: 0;
 }
 
+.btn-color-effect{
+  transition: opacity .2s;
+  &:active{
+    opacity: .55;
+  }
+}
+
 @keyframes btn-click-effect{
   from{
     transform: translate(-50%, -50%) scale(0);

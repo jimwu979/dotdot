@@ -35,7 +35,8 @@
               placeholder="輸入密碼"
               @input="clearError('password')"
             >
-            <button 
+            <button
+              class="btn-color-effect"
               type="button" 
               @click="showPassword = !showPassword" v-text="showPassword ? '隱藏' : '顯示'" 
             />
@@ -45,19 +46,21 @@
           </p>
         </label>
         <aside>
-          <label>
-            <input v-model="remember" type="checkbox" @change="toggleRemember">
-            記住我
-          </label>
-          <RouterLink to="/mobile/forgot-password">忘記密碼？</RouterLink>
+          <button type="button" @click="toggleRemember">
+            <b :class="{ checked: remember }">
+              <Check />
+            </b>
+            <span>記住我</span>
+          </button>
+          <RouterLink class="btn-color-effect" to="/mobile/forgot-password">忘記密碼？</RouterLink>
         </aside>
-        <button class="primary" type="submit" :disabled="isSubmitting">
+        <button class="primary btn-click-effect" type="submit" :disabled="isSubmitting">
           登入
         </button>
       </form>
       <footer>
         還沒有帳號？
-        <RouterLink to="/mobile/register">立即註冊</RouterLink>
+        <RouterLink class="btn-color-effect" to="/mobile/register">立即註冊</RouterLink>
       </footer>
     </section>
   </main>
@@ -65,6 +68,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
+import { Check } from '@lucide/vue'
 import { RouterLink, useRouter } from 'vue-router'
 
 type FieldName = 'email' | 'password'
@@ -91,6 +95,8 @@ onMounted(() => {
 })
 
 const toggleRemember = () => {
+  remember.value = !remember.value
+
   if (remember.value) localStorage.setItem(rememberedEmailKey, email.value)
   else localStorage.removeItem(rememberedEmailKey)
 }
@@ -253,9 +259,31 @@ const submit = async () => {
       }
       > aside {
         @include flexbox(row, space-between, center);
-        > label {
+        > button {
           gap: 7px;
           @include flexbox(row, flex-start, center);
+          > b {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            border-radius: 5px;
+            border: 1px solid $stone;
+            @include flexbox(row, center, center);
+            transition: border-color .2s, background-color .2s;
+            > svg {
+              width: 14px;
+              opacity: 0;
+              stroke: $white;
+              transition: opacity .2s;
+            }
+            &.checked {
+              border-color: $mustard;
+              background-color: $mustard;
+              > svg {
+                opacity: 1;
+              }
+            }
+          }
         }
         > a {
           color: $brown;

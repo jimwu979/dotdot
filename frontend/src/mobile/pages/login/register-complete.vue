@@ -9,7 +9,7 @@
       <span>註冊完成</span>
       <h1>歡迎加入 dotdot！</h1>
       <p>帳號已建立完成，現在就開始記錄第一筆吧。</p>
-      <RouterLink to="/mobile/login">開始登入</RouterLink>
+      <RouterLink class="btn-color-effect" to="/mobile/login">開始登入</RouterLink>
     </section>
   </main>
 </template>

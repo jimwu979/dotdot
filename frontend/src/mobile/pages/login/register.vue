@@ -66,11 +66,11 @@
             <span :class="{ show: passwordMismatch }">兩次輸入的密碼不一致</span>
           </p>
         </label>
-        <button class="primary" type="submit" :disabled="isSubmitting">建立帳號</button>
+        <button class="primary btn-click-effect" type="submit" :disabled="isSubmitting">建立帳號</button>
       </form>
       <footer>
         已經有帳號？
-        <RouterLink to="/mobile/login">返回登入</RouterLink>
+        <RouterLink class="btn-color-effect" to="/mobile/login">返回登入</RouterLink>
       </footer>
     </section>
   </main>

@@ -10,21 +10,26 @@
         <h1>找回你的帳號</h1>
         <p>輸入註冊信箱，我們會寄送重設密碼連結。</p>
       </div>
-      <form @submit.prevent="submit">
+      <form novalidate @submit.prevent="submit">
         <label>
           <span>電子信箱</span>
           <input
             v-model.trim="email"
+            :class="{ error: emailEmpty || emailInvalid }"
             type="email"
             autocomplete="email"
             placeholder="name@example.com"
-            required
+            @input="clearEmailError"
           >
+          <p class="error-message">
+            <span :class="{ show: emailEmpty }">請輸入電子信箱</span>
+            <span :class="{ show: emailInvalid }">請輸入正確的電子信箱格式</span>
+          </p>
         </label>
-        <button type="submit">寄送重設連結</button>
+        <button class="btn-click-effect" type="submit">寄送重設連結</button>
       </form>
       <footer>
-        <RouterLink to="/mobile/login">← 返回登入</RouterLink>
+        <RouterLink class="btn-color-effect" to="/mobile/login">← 返回登入</RouterLink>
       </footer>
     </section>
   </main>
@@ -36,7 +41,24 @@ import { RouterLink, useRouter } from 'vue-router'
 
 const email = ref('')
 const router = useRouter()
-const submit = () => router.push('/mobile/reset-password')
+const emailEmpty = ref(false)
+const emailInvalid = ref(false)
+
+const clearEmailError = () => {
+  emailEmpty.value = false
+  emailInvalid.value = false
+}
+
+const submit = () => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  emailEmpty.value = !email.value
+  emailInvalid.value = Boolean(email.value) && !emailPattern.test(email.value)
+
+  if (emailEmpty.value || emailInvalid.value) return
+
+  router.push('/mobile/reset-password')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -86,7 +108,6 @@ const submit = () => router.push('/mobile/reset-password')
       gap: 20px;
       @include flexbox(column, flex-start, stretch);
       > label {
-        gap: 7px;
         font-weight: 600;
         @include flexbox(column, flex-start, stretch);
         > input {
@@ -96,6 +117,29 @@ const submit = () => router.push('/mobile/reset-password')
           border-radius: 12px;
           border: 1px solid $stone;
           background-color: $white;
+        }
+        > input.error {
+          border-color: $red;
+        }
+        > .error-message {
+          height: 24px;
+          line-height: 1;
+          position: relative;
+          pointer-events: none;
+          > span {
+            top: 0;
+            left: 0;
+            opacity: 0;
+            color: $red;
+            line-height: 18px;
+            position: absolute;
+            pointer-events: none;
+            transition: opacity .2s;
+            &.show {
+              opacity: 1;
+              pointer-events: auto;
+            }
+          }
         }
       }
       > button {
