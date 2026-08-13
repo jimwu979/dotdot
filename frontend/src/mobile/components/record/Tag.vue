@@ -54,7 +54,7 @@
     // background-color: $white;
     @include flexbox(row, flex-start, center);
     >ul{
-      gap: 8px;
+      gap: 12px;
       width: 100%;
       flex-wrap: wrap;
       @include flexbox(row, flex-start, flex-start);
