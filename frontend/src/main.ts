@@ -10,6 +10,24 @@ const routerModule = isMobile
 
 if (isMobile) {
   await import('@/mobile/assets/scss/main.scss')
+
+  const pressSelector = '.btn-click-effect'
+  let pressedElement: HTMLElement | null = null
+
+  document.addEventListener('touchstart', event => {
+    if (!(event.target instanceof Element)) return
+
+    pressedElement = event.target.closest<HTMLElement>(pressSelector)
+    pressedElement?.classList.add('is-pressed')
+  }, { capture: true, passive: true })
+
+  const clearPressedElement = () => {
+    pressedElement?.classList.remove('is-pressed')
+    pressedElement = null
+  }
+
+  document.addEventListener('touchend', clearPressedElement, { capture: true, passive: true })
+  document.addEventListener('touchcancel', clearPressedElement, { capture: true, passive: true })
 } else {
   await import('@/desktop/assets/scss/main.scss')
 }

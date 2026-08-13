@@ -26,6 +26,48 @@ input{
   font-size: 16px;
 }
 
+.btn-click-effect{
+  z-index: 0;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  border-radius: 8px;
+  &::after{
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    opacity: 0;
+    z-index: 0;
+    content: '';
+    position: absolute;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    pointer-events: none;
+    background-color: rgba($black, .1);
+    transform: translate(-50%, -50%) scale(2);
+    transition: opacity .35s ease-out;
+  }
+  &:active::after,
+  &.is-pressed::after{
+    opacity: 1;
+    animation: btn-click-effect .3s ease-out forwards;
+    transition: opacity 0s;
+  }
+  >*{
+    z-index: 1;
+    position: relative;
+  }
+}
+
+@keyframes btn-click-effect{
+  from{
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to{
+    transform: translate(-50%, -50%) scale(2);
+  }
+}
+
 .component.breadcrumb + *{
   margin-top: 24px;
 }
