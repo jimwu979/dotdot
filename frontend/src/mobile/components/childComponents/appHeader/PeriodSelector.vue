@@ -1,8 +1,8 @@
 <template>
   <div class="component statisticsPeriodSelector">
-    <button type="button" :aria-label="previousLabel" @click="changePeriod(-1)" />
+    <button type="button" @click="changePeriod(-1)" />
     <strong>{{ title }}</strong>
-    <button type="button" :aria-label="nextLabel" @click="changePeriod(1)" />
+    <button type="button" @click="changePeriod(1)" />
   </div>
 </template>
 
@@ -36,8 +36,6 @@
     ? `${selectedYear.value}年`
     : `${selectedMonth.value}月`,
   )
-  const previousLabel = computed(() => props.mode === 'year' ? '上一年' : '上個月')
-  const nextLabel = computed(() => props.mode === 'year' ? '下一年' : '下個月')
 
   const changePeriod = (offset: number) => {
     if (props.mode === 'year') {

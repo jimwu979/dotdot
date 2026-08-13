@@ -122,7 +122,7 @@
               @click="selectPeriod(period.value, index)"
               v-text="period.label"
             />
-            <span class="period-tail" aria-hidden="true" />
+            <span class="period-tail" />
           </div>
         </div>
         <div class="btn-box">

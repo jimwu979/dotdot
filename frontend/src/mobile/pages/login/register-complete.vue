@@ -5,7 +5,7 @@
       <p>簡單記帳，安心生活</p>
     </header>
     <section>
-      <div aria-hidden="true">✓</div>
+      <div>✓</div>
       <span>註冊完成</span>
       <h1>歡迎加入 dotdot！</h1>
       <p>帳號已建立完成，現在就開始記錄第一筆吧。</p>

@@ -4,13 +4,11 @@
     <button
       class="assistant"
       type="button"
-      aria-label="開啟點點記帳"
       @click.stop="toggleSelector('dotdot')"
     />
     <button
       :class="['add', { 'close-btn': selectorType !== '' }]"
       type="button"
-      :aria-label="selectorType === '' ? '開啟記帳類別' : '關閉選單'"
       @click.stop="clickAddButton"
     />
 

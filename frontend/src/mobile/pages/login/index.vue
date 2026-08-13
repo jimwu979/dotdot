@@ -5,7 +5,7 @@
       <h1>點點記帳</h1>
     </header>
     <section>
-      <p class="api-error" :class="{ show: apiError }" role="alert">
+      <p class="api-error" :class="{ show: apiError }">
         帳號或密碼錯誤
       </p>
       <form novalidate @submit.prevent="submit">
@@ -19,7 +19,7 @@
             placeholder="name@example.com"
             @input="clearError('email')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: emailEmpty }">請輸入電子信箱</span>
             <span :class="{ show: emailInvalid }">請輸入正確的電子信箱格式</span>
           </p>
@@ -40,7 +40,7 @@
               @click="showPassword = !showPassword" v-text="showPassword ? '隱藏' : '顯示'" 
             />
           </div>
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: passwordEmpty }">請輸入密碼</span>
           </p>
         </label>

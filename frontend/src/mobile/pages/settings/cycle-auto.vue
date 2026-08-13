@@ -25,7 +25,6 @@
         <button
           class="drag"
           type="button"
-          :aria-label="`拖曳排序${item.note || item.categoryName}`"
           @pointerdown="startAutomaticDrag($event, item.id)"
         >
           <GripVertical />
@@ -75,7 +74,6 @@
                 path: '/mobile/settings/cycle-auto-editor',
                 query: { automaticId: item.id },
               }"
-              :aria-label="`編輯${item.note || item.categoryName}`"
             >
               <Pencil />
               編輯

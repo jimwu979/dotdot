@@ -5,7 +5,7 @@
       <p>簡單記帳，安心生活</p>
     </header>
     <section>
-      <p class="api-error" :class="{ show: apiError }" role="alert">
+      <p class="api-error" :class="{ show: apiError }">
         密碼更新失敗，請稍後再試
       </p>
       <form novalidate @submit.prevent="submit">
@@ -19,7 +19,7 @@
             placeholder="輸入新密碼"
             @input="clearError('password')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: passwordEmpty }">請輸入新密碼</span>
           </p>
         </label>
@@ -33,7 +33,7 @@
             placeholder="再次輸入密碼"
             @input="clearError('confirmPassword')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: confirmPasswordEmpty }">請再次輸入密碼</span>
             <span :class="{ show: passwordMismatch }">兩次輸入的密碼不一致</span>
           </p>

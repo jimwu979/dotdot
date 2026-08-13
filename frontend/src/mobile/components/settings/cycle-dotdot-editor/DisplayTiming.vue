@@ -116,7 +116,6 @@
             />
             <span
               class="period-tail"
-              aria-hidden="true"
             />
           </div>
         </div>

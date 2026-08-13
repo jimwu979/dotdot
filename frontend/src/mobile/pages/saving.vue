@@ -63,7 +63,6 @@
     <RouterLink
       class="add-button"
       :to="{ name: 'saveing-edit' }"
-      aria-label="新增存款收支"
     />
 
     <AppHeader title="存款" right-action="scroll" />

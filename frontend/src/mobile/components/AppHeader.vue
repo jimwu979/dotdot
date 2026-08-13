@@ -15,7 +15,6 @@
         v-if="rightAction === 'delete'"
         type="button"
         class="delete"
-        aria-label="刪除"
         @click="emit('delete')"
       >
         <Trash />
@@ -25,7 +24,6 @@
         type="button"
         class="scroll"
         :class="{ 'at-bottom': isAtBottom }"
-        :aria-label="isAtBottom ? '回到最上方' : '前往最下方'"
         @click="togglePagePosition"
       >
         <ArrowDown />

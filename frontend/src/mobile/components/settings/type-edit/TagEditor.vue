@@ -48,7 +48,6 @@
           <input
             v-model="draftTagText"
             type="text"
-            @keyup.enter="confirmTagEdit"
           >
         </label>
         <button

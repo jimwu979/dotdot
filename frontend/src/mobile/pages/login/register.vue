@@ -5,7 +5,7 @@
       <p>簡單記帳，安心生活</p>
     </header>
     <section>
-      <p class="api-error" :class="{ show: apiError }" role="alert">
+      <p class="api-error" :class="{ show: apiError }">
         註冊失敗，請稍後再試
       </p>
       <form novalidate @submit.prevent="submit">
@@ -18,7 +18,7 @@
             placeholder="輸入你的暱稱"
             @input="clearError('name')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: nameEmpty }">請輸入暱稱</span>
           </p>
         </label>
@@ -32,7 +32,7 @@
             placeholder="name@example.com"
             @input="clearError('email')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: emailEmpty }">請輸入電子信箱</span>
             <span :class="{ show: emailInvalid }">請輸入正確的電子信箱格式</span>
           </p>
@@ -47,7 +47,7 @@
             placeholder="輸入密碼"
             @input="clearError('password')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: passwordEmpty }">請輸入密碼</span>
           </p>
         </label>
@@ -61,7 +61,7 @@
             placeholder="再次輸入密碼"
             @input="clearError('confirmPassword')"
           >
-          <p class="error-message" role="alert">
+          <p class="error-message">
             <span :class="{ show: confirmPasswordEmpty }">請再次輸入密碼</span>
             <span :class="{ show: passwordMismatch }">兩次輸入的密碼不一致</span>
           </p>

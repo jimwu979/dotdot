@@ -2,7 +2,6 @@
   <button
     type="button"
     class="component prevPage"
-    aria-label="返回上一頁"
     @click="goBack"
   >
     <ChevronLeft />

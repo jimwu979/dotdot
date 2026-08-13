@@ -23,9 +23,8 @@
       </section>
 
       <section class="form-field">
-        <label class="require" for="saving-amount">金額</label>
+        <label class="require">金額</label>
         <input
-          id="saving-amount"
           v-model.number="draft.amount"
           type="number"
           inputmode="decimal"
@@ -51,23 +50,20 @@
           <button
             class="prev"
             type="button"
-            aria-label="上一個月"
             @click="changeDraftMonth(-1)"
           />
           <strong>{{ draftYear }} 年 {{ draftMonth }} 月</strong>
           <button
             class="next"
             type="button"
-            aria-label="下一個月"
             @click="changeDraftMonth(1)"
           />
         </div>
       </section>
 
       <section class="form-field">
-        <label class="require" for="saving-note">備註</label>
+        <label class="require">備註</label>
         <input
-          id="saving-note"
           v-model.trim="draft.note"
           type="text"
           maxlength="40"
