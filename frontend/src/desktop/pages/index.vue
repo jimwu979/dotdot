@@ -22,15 +22,19 @@
         :total-expense="totalExpense"
       />
       <Browse_CategorySummary :list="categorySummary" />
-      <Action_Buttons @select="actionPanel = $event" />
-      <Action_Panel :panel="actionPanel" @close="actionPanel = ''" />
+      <Action_Buttons @select="selectActionPanel" />
+      <Action_Panel
+        :panel="actionPanel"
+        :record-id="editingRecordId"
+        @close="closeActionPanel"
+      />
     </aside>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import DesktopHeader from '@/desktop/components/header.vue'
 import Action_Buttons from '@/desktop/components/index/aside/Action_Buttons.vue'
 import Action_Panel, { type ActionPanelType } from '@/desktop/components/index/aside/Action_Panel.vue'
@@ -48,10 +52,12 @@ import { useCategoryStore } from '@/shared/stores/category'
 import { useRecordStore } from '@/shared/stores/record'
 
 const route = useRoute()
+const router = useRouter()
 const now = new Date()
 const categoryStore = useCategoryStore()
 const recordStore = useRecordStore()
 const actionPanel = ref<ActionPanelType>('')
+const editingRecordId = ref<number>()
 const getRouteNumber = (value: unknown, fallback: number, min: number, max: number) => {
   const rawValue = Array.isArray(value) ? value[0] : value
   const numberValue = Number(rawValue)
@@ -142,9 +148,55 @@ const categorySummary = computed<CategorySummaryItem[]>(() => {
     }))
 })
 
+const getQueryRecordId = () => {
+  const rawRecordId = Array.isArray(route.query.recordId)
+    ? route.query.recordId[0]
+    : route.query.recordId
+  const recordId = Number(rawRecordId)
+
+  return Number.isInteger(recordId) && recordId > 0 ? recordId : undefined
+}
+const openLinkedRecord = () => {
+  const recordId = getQueryRecordId()
+  const linkedRecord = recordStore.recordList.find(record => record.id === recordId)
+
+  if (!linkedRecord) return
+
+  const [year, month, day] = linkedRecord.occurredAt.split('-').map(Number)
+  selectedDate.value = new Date(year, month - 1, day).getTime()
+  editingRecordId.value = linkedRecord.id
+  actionPanel.value = 'normal'
+}
+const clearLinkedRecord = () => {
+  if (!('recordId' in route.query)) return
+
+  const query = { ...route.query }
+  delete query.recordId
+  void router.replace({ query })
+}
+const selectActionPanel = (panel: ActionPanelType) => {
+  editingRecordId.value = undefined
+  clearLinkedRecord()
+  actionPanel.value = panel
+}
+const closeActionPanel = () => {
+  actionPanel.value = ''
+  editingRecordId.value = undefined
+  clearLinkedRecord()
+}
+
 watch(
   () => [selectedYear.value, selectedMonth.value],
-  () => { selectedDate.value = getDefaultDate() },
+  () => {
+    selectedDate.value = getDefaultDate()
+    openLinkedRecord()
+  },
+)
+
+watch(
+  () => route.query.recordId,
+  () => { openLinkedRecord() },
+  { immediate: true },
 )
 </script>
 
@@ -175,7 +227,7 @@ watch(
       flex: 0 0 420px;
       min-height: 100vh;
       border-left: 1px solid $oat;
-      background-color: $oat;
+      background-color: $white;
       @include flexbox(column, flex-start, stretch);
       >.actionButtons{
         margin-top: auto;

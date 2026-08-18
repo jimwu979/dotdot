@@ -6,7 +6,12 @@
       <a v-if="panel === 'dotdot'" class="btn-click-effect edit" href="#" @click.prevent>編輯</a>
       <span v-else />
     </header>
-    <Normal v-if="panel === 'normal'" @close="emit('close')" />
+    <Normal
+      v-if="panel === 'normal'"
+      :key="recordId ?? 'new'"
+      :record-id="recordId"
+      @close="emit('close')"
+    />
     <Batch v-else-if="panel === 'batch'" @close="emit('close')" />
     <Dotdot v-else-if="panel === 'dotdot'" @close="emit('close')" />
   </aside>
@@ -22,6 +27,7 @@ export type ActionPanelType = 'normal' | 'batch' | 'dotdot' | ''
 
 const props = defineProps<{
   panel: ActionPanelType
+  recordId?: number
 }>()
 
 const emit = defineEmits<{

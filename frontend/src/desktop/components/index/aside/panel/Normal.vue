@@ -63,7 +63,11 @@ import CategoryPicker from '@/desktop/components/index/aside/panel/CategoryPicke
 import DateModal from '@/desktop/components/index/aside/panel/DateModal.vue'
 import { useOverlayScrollbar } from '@/desktop/utils/useOverlayScrollbar'
 import { useCategoryStore } from '@/shared/stores/category'
-import { useRecordStore } from '@/shared/stores/record'
+import { useRecordStore, type RecordData } from '@/shared/stores/record'
+
+const props = defineProps<{
+  recordId?: number
+}>()
 
 const emit = defineEmits<{
   close: []
@@ -90,8 +94,10 @@ const record = reactive({
   tagIds: [] as number[],
   note: '',
   amount: 0,
+  isAutomatic: false,
 })
 const errorMessage = ref('')
+const isHydrating = ref(false)
 const isDateModalOpen = ref(false)
 const scrollElement = ref<HTMLDivElement | null>(null)
 const { isScrollbarVisible, scrollbarStyle } = useOverlayScrollbar(scrollElement)
@@ -103,8 +109,28 @@ const tags = computed(() => (
 ))
 
 watch(() => record.categoryId, () => {
+  if (isHydrating.value) return
+
   record.tagIds = []
 })
+
+watch(() => props.recordId, recordId => {
+  if (recordId === undefined) return
+
+  const sourceRecord = recordStore.recordList.find(record => record.id === recordId)
+  if (!sourceRecord) return
+
+  isHydrating.value = true
+  Object.assign(record, {
+    occurredAt: sourceRecord.occurredAt,
+    categoryId: sourceRecord.categoryId,
+    tagIds: [...sourceRecord.tagIds],
+    note: sourceRecord.note,
+    amount: sourceRecord.amount,
+    isAutomatic: sourceRecord.isAutomatic,
+  })
+  isHydrating.value = false
+}, { immediate: true })
 
 const toggleTag = (tagId: number) => {
   record.tagIds = record.tagIds.includes(tagId)
@@ -123,14 +149,21 @@ const saveRecord = (amount: number) => {
   }
 
   record.amount = amount
-  recordStore.addRecord({
+  const recordData: RecordData = {
     categoryId: record.categoryId,
     tagIds: [...record.tagIds],
     note: record.note,
     amount,
-    isAutomatic: false,
+    isAutomatic: record.isAutomatic,
     occurredAt: record.occurredAt,
-  })
+  }
+
+  if (props.recordId === undefined) {
+    recordStore.addRecord(recordData)
+  } else if (!recordStore.updateRecord(props.recordId, recordData)) {
+    errorMessage.value = '找不到這筆記帳資料'
+    return
+  }
   record.tagIds = []
   record.note = ''
   record.amount = 0
