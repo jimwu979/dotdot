@@ -33,6 +33,9 @@ if (isMobile) {
   document.addEventListener('touchcancel', clearPressedElement, { capture: true, passive: true })
 } else {
   await import('@/desktop/assets/scss/main.scss')
+  const { initializeDesktopScrollbars } = await import('@/desktop/utils/scrollbar')
+
+  initializeDesktopScrollbars()
 }
 
 document.body.addEventListener('click', () => {

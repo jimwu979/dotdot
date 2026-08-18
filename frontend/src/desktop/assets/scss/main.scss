@@ -1,18 +1,98 @@
 @use '@/shared/assets/scss/main.scss';
 
-// body {
-//   margin: 0;
-//   background-color: $background;
-// }
+*{
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
 
-// .page{
-//   width: 100%;
-//   overflow: hidden;
-//   padding: #{$header_height} 0 100px;
-//   min-height: calc(100vh - $header_height);
-// }
-// .container {
-//   width: 1280px;
-//   margin: 0 auto;
-//   max-width: 100%;
-// }
+*::-webkit-scrollbar{
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track{
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb{
+  border-radius: 99px;
+  background-color: transparent;
+}
+
+*.show-scrollbar{
+  scrollbar-color: rgba($black,.28) transparent;
+}
+
+*.show-scrollbar::-webkit-scrollbar-thumb{
+  background-color: rgba($black,.28);
+}
+
+body {
+  margin: 0;
+  background-color: $yellow;
+}
+
+.page{
+  width: 100%;
+  overflow: hidden;
+  min-height: 100dvh;
+  background-color: $background;
+  @include flexbox(row, flex-start, flex-start);
+}
+
+input{
+  font-size: 16px;
+}
+
+.btn-click-effect{
+  z-index: 0;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  &::before,
+  &::after{
+    opacity: 0;
+    z-index: 0;
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+  &::before{
+    inset: 0;
+    border-radius: inherit;
+    background-color: rgba($black, .06);
+    transition: opacity .2s;
+  }
+  &::after{
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: rgba($black, .14);
+    transform: translate(-50%, -50%) scale(2);
+    transition: opacity .35s ease-out;
+  }
+  &:hover::before{
+    opacity: 1;
+  }
+  &:active::after,
+  &.is-pressed::after{
+    opacity: 1;
+    animation: btn-click-effect .3s ease-out forwards;
+    transition: opacity 0s;
+  }
+  >*{
+    z-index: 1;
+    position: relative;
+  }
+}
+
+@keyframes btn-click-effect{
+  from{
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to{
+    transform: translate(-50%, -50%) scale(2);
+  }
+}
