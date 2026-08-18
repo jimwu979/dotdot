@@ -5,11 +5,19 @@
       <h2>點點記帳</h2>
     </div>
     <nav>
-      <router-link class="now btn-click-effect" to="/">
+      <router-link
+        class="btn-click-effect"
+        :class="{ now: route.name === 'index' }"
+        :to="currentMonthRoute"
+      >
         <BookOpenText />
         <h2>記帳</h2>
       </router-link>
-      <router-link class="btn-click-effect" to="">
+      <router-link
+        class="btn-click-effect"
+        :class="{ now: route.name === 'statistics' }"
+        :to="{ name: 'statistics' }"
+      >
         <ChartPie />
         <h2>統計</h2>
       </router-link>
@@ -34,6 +42,17 @@
 
 <script setup lang="ts">
 import { BookOpenText, ChartPie, Landmark, Settings } from '@lucide/vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const now = new Date()
+const currentMonthRoute = {
+  name: 'index',
+  params: {
+    year: now.getFullYear(),
+    month: String(now.getMonth() + 1).padStart(2, '0'),
+  },
+}
 </script>
 
 <style scoped lang="scss">
