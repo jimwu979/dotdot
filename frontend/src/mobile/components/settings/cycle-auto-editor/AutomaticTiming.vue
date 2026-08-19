@@ -1,15 +1,17 @@
 <template>
-  <div :class="['component automatic-timing', { disabled }]">
+  <div :class="['component automatic-timing', { disabled, desktop }]">
     <section class="frequency">
       <b>頻率</b>
       <div>
         <button
-          class="btn-click-effect"
           v-for="option in frequencyOptions"
           :key="option.value"
           type="button"
-          :class="{ selected: modelValue.frequency === option.value }"
-          @click="updateValue({ frequency: option.value })"
+          :class="[
+            { selected: modelValue.frequency === option.value },
+            { 'btn-click-effect': !desktop },
+          ]"
+          @click="selectFrequency(option.value)"
         >
           <span />
           {{ option.label }}
@@ -18,7 +20,7 @@
     </section>
 
     <section
-      v-if="modelValue.frequency === 'weekly'"
+      v-if="modelValue.frequency !== 'monthly'"
       class="weekdays"
     >
       <div>
@@ -27,7 +29,7 @@
           v-for="weekday in weekdays"
           :key="weekday.value"
           type="button"
-          :class="{ selected: modelValue.weekdays.includes(weekday.value) }"
+          :class="{ selected: isWeekdaySelected(weekday.value) }"
           @click="toggleWeekday(weekday.value)"
         >
           {{ weekday.label }}
@@ -40,7 +42,17 @@
       v-if="modelValue.frequency === 'monthly'"
       class="month-day"
     >
+      <input
+        v-if="desktop"
+        :value="modelValue.monthDay ?? 1"
+        type="number"
+        min="1"
+        max="31"
+        inputmode="numeric"
+        @input="updateMonthDay"
+      >
       <select
+        v-else
         :value="modelValue.monthDay ?? 1"
         @change="updateMonthDay"
       >
@@ -84,11 +96,10 @@
             @pointercancel="endWheelInteraction('hour')"
           >
             <button
-              class="btn-click-effect"
               v-for="(hour, index) in hourOptions"
               :key="hour"
               type="button"
-              :class="{ selected: draftHour === hour }"
+              :class="[{ selected: draftHour === hour }, { 'btn-click-effect': !desktop }]"
               @click="selectHour(hour, index)"
               v-text="String(hour).padStart(2, '0')"
             />
@@ -102,11 +113,10 @@
             @pointercancel="endWheelInteraction('minute')"
           >
             <button
-              class="btn-click-effect"
               v-for="(minute, index) in minuteOptions"
               :key="minute"
               type="button"
-              :class="{ selected: draftMinute === minute }"
+              :class="[{ selected: draftMinute === minute }, { 'btn-click-effect': !desktop }]"
               @click="selectMinute(minute, index)"
               v-text="String(minute).padStart(2, '0')"
             />
@@ -120,11 +130,10 @@
             @pointercancel="endWheelInteraction('period')"
           >
             <button
-              class="btn-click-effect"
               v-for="(period, index) in periodOptions"
               :key="period.value"
               type="button"
-              :class="{ selected: draftPeriodIndex === index }"
+              :class="[{ selected: draftPeriodIndex === index }, { 'btn-click-effect': !desktop }]"
               @click="selectPeriod(period.value, index)"
               v-text="period.label"
             />
@@ -168,6 +177,7 @@
   const props = withDefaults(defineProps<{
     modelValue: AutomaticTimingValue
     disabled?: boolean
+    desktop?: boolean
   }>(), {
     disabled: false,
   })
@@ -190,6 +200,7 @@
     { value: 5, label: '五' },
     { value: 6, label: '六' },
   ]
+  const allWeekdays = weekdays.map(weekday => weekday.value)
   const monthDayOptions = Array.from({ length: 31 }, (_, index) => index + 1)
   const hourOptions = Array.from({ length: 12 }, (_, index) => index + 1)
   const minuteOptions = [0, 15, 30]
@@ -224,16 +235,40 @@
     })
   }
 
-  const toggleWeekday = (weekday: number) => {
-    const selectedWeekdays = props.modelValue.weekdays.includes(weekday)
-      ? props.modelValue.weekdays.filter(selectedWeekday => selectedWeekday !== weekday)
-      : [...props.modelValue.weekdays, weekday].sort((dayA, dayB) => dayA - dayB)
+  const selectFrequency = (frequency: AutomaticFrequency) => {
+    updateValue({
+      frequency,
+      weekdays: frequency === 'daily'
+        ? [...allWeekdays]
+        : props.modelValue.weekdays,
+    })
+  }
 
-    updateValue({ weekdays: selectedWeekdays })
+  const isWeekdaySelected = (weekday: number) => (
+    props.modelValue.frequency === 'daily'
+    || props.modelValue.weekdays.includes(weekday)
+  )
+
+  const toggleWeekday = (weekday: number) => {
+    const currentWeekdays = props.modelValue.frequency === 'daily'
+      ? allWeekdays
+      : props.modelValue.weekdays
+    const selectedWeekdays = currentWeekdays.includes(weekday)
+      ? currentWeekdays.filter(selectedWeekday => selectedWeekday !== weekday)
+      : [...currentWeekdays, weekday].sort((dayA, dayB) => dayA - dayB)
+
+    updateValue({
+      frequency: props.modelValue.frequency === 'daily'
+        ? 'weekly'
+        : props.modelValue.frequency,
+      weekdays: selectedWeekdays,
+    })
   }
 
   const updateMonthDay = (event: Event) => {
-    updateValue({ monthDay: Number((event.target as HTMLSelectElement).value) })
+    const monthDay = Number((event.target as HTMLInputElement | HTMLSelectElement).value)
+
+    updateValue({ monthDay: Number.isInteger(monthDay) ? monthDay : null })
   }
 
   const parseTime = (value: string) => {
@@ -350,6 +385,7 @@
     clearWheelSnapTimer(wheelName)
 
     if (interactingWheels[wheelName]) return
+    if (props.desktop) return
 
     wheelSnapTimers[wheelName] = window.setTimeout(() => {
       snapWheel(wheelName)
@@ -496,7 +532,8 @@
       }
       &.month-day{
         padding-left: 54px;
-        >select{
+        >select,
+        >input{
           width: 64px;
           height: 42px;
           padding: 0 10px;
@@ -523,6 +560,45 @@
             width: 16px;
             margin: 0 8px 0 4px;
           }
+        }
+      }
+    }
+    &.desktop{
+      >section{
+        &.frequency >div >button{
+          >span{
+            border-color: $brown;
+            &:after{
+              background-color: $brown;
+            }
+          }
+          &:hover >span{
+            background-color: $oat;
+          }
+        }
+        &.weekdays >div >button{
+          overflow: visible;
+        }
+        &.month-day >input{
+          appearance: textfield;
+          -moz-appearance: textfield;
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button{
+            margin: 0;
+            appearance: none;
+            -webkit-appearance: none;
+          }
+        }
+      }
+      :deep(.lightbox){
+        z-index: 10;
+        padding-bottom: 0;
+      }
+      .time-selector >.time-picker >.wheel{
+        scroll-snap-type: y mandatory;
+        >button{
+          scroll-snap-align: center;
+          scroll-snap-stop: always;
         }
       }
     }

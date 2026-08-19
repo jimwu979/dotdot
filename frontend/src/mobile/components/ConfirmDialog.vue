@@ -1,8 +1,8 @@
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTo">
     <div
       class="component confirm-dialog-backdrop"
-      :class="{ open }"
+      :class="{ open, contained }"
       @click.self="emit('cancel')"
     >
       <div class="confirm-dialog">
@@ -37,11 +37,15 @@ withDefaults(defineProps<{
   confirmText?: string
   confirmType?: 'confirm' | 'delete'
   showCancel?: boolean
+  teleportTo?: string
+  contained?: boolean
 }>(), {
   cancelText: '取消',
   confirmText: '確定',
   confirmType: 'confirm',
   showCancel: true,
+  teleportTo: 'body',
+  contained: false,
 })
 
 const emit = defineEmits<{
@@ -61,6 +65,9 @@ const emit = defineEmits<{
   transition: opacity .2s;
   @include flexbox(row, center, center);
   background-color: rgba(42, 36, 24, .45);
+  &.contained{
+    position: absolute;
+  }
   &.open{
     opacity: 1;
     pointer-events: auto;

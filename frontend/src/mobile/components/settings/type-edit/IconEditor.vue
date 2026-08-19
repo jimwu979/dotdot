@@ -46,9 +46,10 @@
         v-for="i in categoryIconList"
         :key="i"
         :class="{'select': i === icon}"
-        @click="selectCategoryIcon(i)"
       >
-        <component :is="categoryIcons[i]" />
+        <button class="btn-click-effect" type="button" @click="selectCategoryIcon(i)">
+          <component :is="categoryIcons[i]" />
+        </button>
         <b>
           <Check />
         </b>
@@ -64,9 +65,13 @@
         v-for="colorId in categoryColorList"
         :key="colorId"
         :class="{'select': colorId === colorIdValue}"
-        :style="{backgroundColor: categoryColors[colorId]}"
-        @click="selectCategoryColor(colorId)"
       >
+        <button
+          class="btn-click-effect"
+          type="button"
+          :style="{ backgroundColor: categoryColors[colorId] }"
+          @click="selectCategoryColor(colorId)"
+        />
         <b>
           <Check />
         </b>
@@ -186,15 +191,19 @@ const selectCategoryColor = (colorId: CategoryColorId) => {
   padding: 24px 12px;
   @include flexbox(row, space-between, flex-start);
   >li{
-    transition: .2s;
     aspect-ratio: 1/1;
     position: relative;
-    border-radius: 50%;
-    background-color: $oat;
     width: calc((100% - (24px * 4))/5);
-    @include flexbox(row, center, center);
-    >svg{
-      width: 80%;
+    >button{
+      width: 100%;
+      aspect-ratio: 1/1;
+      transition: .2s;
+      border-radius: 50%;
+      background-color: $oat;
+      @include flexbox(row, center, center);
+      >svg{
+        width: 80%;
+      }
     }
     >b{
       width: 26px;
@@ -213,18 +222,12 @@ const selectCategoryColor = (colorId: CategoryColorId) => {
       }
     }
     &.select{
-      box-shadow: inset 0 0 0 2px $black;
+      >button{
+        box-shadow: inset 0 0 0 2px $black;
+      }
       >b{
         opacity: 1;
       }
-    }
-  }
-}
-.icon-list{
-  >li{
-    background-color: $oat;
-    &.select{
-      // background-color: $yellow;
     }
   }
 }

@@ -1,16 +1,16 @@
 <template>
-  <div class="component display-timing">
+  <div class="component display-timing" :class="{ desktop }">
     <div class="permanent">
       <b>釘選</b>
       <button
-        class="btn-click-effect"
         type="button"
-        :class="{ checked: modelValue.permanent }"
+        :class="[{ checked: modelValue.permanent }, { 'btn-click-effect': !desktop }]"
         @click="updatePermanent"
       >
         <span><Check /></span>
-        釘選後，將常駐於點點記帳列表上
+        <template v-if="!desktop">釘選後，將常駐於點點記帳列表上</template>
       </button>
+      <span v-if="desktop">釘選後，將常駐於點點記帳列表上</span>
     </div>
 
     <div :class="['schedule', { disabled: modelValue.permanent }]">
@@ -77,11 +77,10 @@
             @pointercancel="endWheelInteraction('hour')"
           >
             <button
-              class="btn-click-effect"
               v-for="(hour, index) in hourOptions"
               :key="hour"
               type="button"
-              :class="{ selected: draftHour === hour }"
+              :class="[{ selected: draftHour === hour }, { 'btn-click-effect': !desktop }]"
               @click="selectHour(hour, index)"
               v-text="String(hour).padStart(2, '0')"
             />
@@ -95,11 +94,10 @@
             @pointercancel="endWheelInteraction('minute')"
           >
             <button
-              class="btn-click-effect"
               v-for="(minute, index) in minuteOptions"
               :key="minute"
               type="button"
-              :class="{ selected: draftMinute === minute }"
+              :class="[{ selected: draftMinute === minute }, { 'btn-click-effect': !desktop }]"
               @click="selectMinute(minute, index)"
               v-text="String(minute).padStart(2, '0')"
             />
@@ -113,11 +111,10 @@
             @pointercancel="endWheelInteraction('period')"
           >
             <button
-              class="btn-click-effect"
               v-for="(period, index) in periodOptions"
               :key="period.value"
               type="button"
-              :class="{ selected: draftPeriodIndex === index }"
+              :class="[{ selected: draftPeriodIndex === index }, { 'btn-click-effect': !desktop }]"
               @click="selectPeriod(period.value, index)"
               v-text="period.label"
             />
@@ -162,6 +159,7 @@
 
   const props = defineProps<{
     modelValue: DisplayTimingValue
+    desktop?: boolean
   }>()
 
   const emit = defineEmits<{
@@ -464,6 +462,9 @@
           }
         }
       }
+      >span{
+        color: $grey;
+      }
     }
     >.schedule{
       gap: 12px;
@@ -542,6 +543,32 @@
               @include flexbox(row, center, center);
             }
           }
+        }
+      }
+    }
+    &.desktop{
+      >.permanent{
+        >button{
+          width: 24px;
+          height: 24px;
+          flex: 0 0 24px;
+          padding: 0;
+          cursor: pointer;
+          overflow: visible;
+          position: static;
+          isolation: auto;
+          >span{
+            width: 24px;
+          }
+        }
+      }
+      >.schedule{
+        >.weekdays >div >button{
+          overflow: visible;
+        }
+        >.times{
+          gap: 24px;
+          justify-content: flex-start;
         }
       }
     }

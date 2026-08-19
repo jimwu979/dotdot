@@ -37,9 +37,15 @@
       :style="dragPreviewStyle"
       v-text="dragPreviewTag.name"
      />
+  </Teleport>
+  <Teleport :to="overlayTarget">
     <div
       class="tag-editor-backdrop"
-      :class="{ 'open': isTagEditorOpen, 'ready': isTagEditorReady }"
+      :class="{
+        'open': isTagEditorOpen,
+        'ready': isTagEditorReady,
+        'contained': desktop,
+      }"
       @click.self="closeTagEditor"
     >
       <div class="tag-editor-dialog">
@@ -80,6 +86,8 @@
   <ConfirmDialog
     :open="isDeleteConfirmOpen"
     :message="`確定要刪除「${selectedTag?.name}」嗎？`"
+    :teleport-to="overlayTarget"
+    :contained="desktop"
     confirm-text="確定刪除"
     confirm-type="delete"
     @cancel="isDeleteConfirmOpen = false"
@@ -106,10 +114,15 @@ interface TagRow {
   elements: HTMLButtonElement[]
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   tags: Tag[]
   nextTagId: number
-}>()
+  desktop?: boolean
+  overlayTarget?: string
+}>(), {
+  desktop: false,
+  overlayTarget: 'body',
+})
 
 const emit = defineEmits<{
   'update:tags': [tags: Tag[]]
@@ -515,6 +528,9 @@ onBeforeUnmount(() => {
   transition: opacity .2s;
   @include flexbox(row, center, center);
   background-color: rgba(42, 36, 24, .45);
+  &.contained{
+    position: absolute;
+  }
   &.open{
     opacity: 1;
     pointer-events: auto;
