@@ -1,7 +1,7 @@
 <template>
   <section class="component asideCategoryPicker">
     <header>
-      <b>類別</b>
+      <b>類別 <i v-if="required">*</i></b>
       <div>
         <button class="btn-click-effect" type="button" :class="{ now: !isExpense }" @click="isExpense = false">
           收入
@@ -11,32 +11,42 @@
         </button>
       </div>
     </header>
-    <div class="list">
-      <button
-        v-for="category in filteredCategories"
-        :key="category.id"
-        class="btn-click-effect"
-        type="button"
-        :class="{ selected: category.id === modelValue }"
-        @click="emit('update:modelValue', category.id)"
-      >
-        <span :style="{ backgroundColor: categoryColors[category.color] }">
-          <component :is="categoryIcons[category.icon]" />
-        </span>
-        <b>{{ category.name }}</b>
-      </button>
+    <div class="list-frame" :class="{ 'three-row-viewport': threeRowViewport }">
+      <div ref="scrollElement" class="list">
+        <button
+          v-for="category in filteredCategories"
+          :key="category.id"
+          class="btn-click-effect"
+          type="button"
+          :class="{ selected: category.id === modelValue }"
+          @click="emit('update:modelValue', category.id)"
+        >
+          <span :style="{ backgroundColor: categoryColors[category.color] }">
+            <component :is="categoryIcons[category.icon]" />
+          </span>
+          <b>{{ category.name }}</b>
+        </button>
+      </div>
+      <span
+        v-show="threeRowViewport && isScrollbarVisible"
+        class="overlay-scrollbar"
+        :style="scrollbarStyle"
+      />
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useOverlayScrollbar } from '@/desktop/utils/useOverlayScrollbar'
 import { categoryColors } from '@/shared/colors/category'
 import { categoryIcons } from '@/shared/icons/category'
 import { useCategoryStore } from '@/shared/stores/category'
 
 const props = defineProps<{
   modelValue: number
+  required?: boolean
+  threeRowViewport?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -45,6 +55,8 @@ const emit = defineEmits<{
 
 const categoryStore = useCategoryStore()
 const isExpense = ref(true)
+const scrollElement = ref<HTMLDivElement | null>(null)
+const { isScrollbarVisible, scrollbarStyle, updateScrollbar } = useOverlayScrollbar(scrollElement)
 const selectedCategory = computed(() => (
   categoryStore.categoryList.find(category => category.id === props.modelValue)
 ))
@@ -58,6 +70,12 @@ const filteredCategories = computed(() => (
 watch(selectedCategory, (category) => {
   if (category) isExpense.value = category.isExpense
 }, { immediate: true })
+
+watch(isExpense, async () => {
+  await nextTick()
+  if (scrollElement.value) scrollElement.value.scrollTop = 0
+  updateScrollbar()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -68,6 +86,9 @@ watch(selectedCategory, (category) => {
       >b{
         font-size: 15px;
         font-weight: 600;
+        >i{
+          color: $red;
+        }
       }
       >div{
         padding: 2px;
@@ -88,38 +109,79 @@ watch(selectedCategory, (category) => {
         }
       }
     }
-    >.list{
-      gap: 6px;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      >button{
-        gap: 3px;
-        padding: 7px 3px;
-        min-width: 0;
-        border-radius: 10px;
-        @include flexbox(column, center, center);
-        >span{
-          width: 34px;
-          aspect-ratio: 1/1;
-          border-radius: 50%;
-          @include flexbox(row, center, center);
-          >svg{
-            width: 20px;
-            stroke: $white;
+    >.list-frame{
+      position: relative;
+      &.three-row-viewport{
+        height: 255px;
+        border-radius: 12px;
+        border: 1px solid $oat;
+        overflow: hidden;
+        >.list{
+          height: 100%;
+          padding: 8px;
+          overflow-y: auto;
+          align-content: start;
+          scrollbar-width: none;
+          overscroll-behavior: contain;
+          &::-webkit-scrollbar{
+            width: 0;
+            height: 0;
+            display: none;
+          }
+          &::-webkit-scrollbar-button,
+          &::-webkit-scrollbar-button:single-button,
+          &::-webkit-scrollbar-button:vertical:decrement,
+          &::-webkit-scrollbar-button:vertical:increment{
+            width: 0;
+            height: 0;
+            display: none;
           }
         }
-        >b{
-          width: 100%;
-          overflow: hidden;
-          font-size: 11px;
-          font-weight: 600;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+      }
+      >.list{
+        gap: 6px;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        >button{
+          gap: 3px;
+          padding: 7px 3px;
+          min-width: 0;
+          min-height: 75px;
+          border-radius: 10px;
+          @include flexbox(column, center, center);
+          >span{
+            width: 34px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            @include flexbox(row, center, center);
+            >svg{
+              width: 20px;
+              stroke: $white;
+            }
+          }
+          >b{
+            width: 100%;
+            overflow: hidden;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          &.selected{
+            background-color: $white;
+            box-shadow: inset 0 0 0 1px $stone;
+          }
         }
-        &.selected{
-          background-color: $white;
-          box-shadow: inset 0 0 0 1px $stone;
-        }
+      }
+      >.overlay-scrollbar{
+        top: 0;
+        right: 2px;
+        width: 4px;
+        z-index: 2;
+        position: absolute;
+        border-radius: 99px;
+        pointer-events: none;
+        background-color: rgba($black, .28);
       }
     }
   }

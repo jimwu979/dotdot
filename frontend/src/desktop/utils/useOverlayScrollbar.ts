@@ -64,5 +64,6 @@ export const useOverlayScrollbar = (scrollElement: Ref<HTMLElement | null>) => {
   return {
     isScrollbarVisible,
     scrollbarStyle,
+    updateScrollbar,
   }
 }

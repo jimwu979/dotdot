@@ -29,7 +29,11 @@
         <Landmark />
         <h2>存款</h2>
       </router-link>
-      <router-link class="btn-click-effect" to="">
+      <router-link
+        class="btn-click-effect"
+        :class="{ now: route.name === 'settings' }"
+        :to="{ name: 'settings' }"
+      >
         <Settings />
         <h2>設定</h2>
       </router-link>
