@@ -21,7 +21,11 @@
         <ChartPie />
         <h2>統計</h2>
       </router-link>
-      <router-link class="btn-click-effect" to="">
+      <router-link
+        class="btn-click-effect"
+        :class="{ now: route.name === 'saving' }"
+        :to="{ name: 'saving' }"
+      >
         <Landmark />
         <h2>存款</h2>
       </router-link>

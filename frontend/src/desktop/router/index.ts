@@ -26,6 +26,11 @@ export default createRouter({
       component: () => import('@/desktop/pages/statistics.vue'),
     },
     {
+      path: '/desktop/saving',
+      name: 'saving',
+      component: () => import('@/desktop/pages/saving.vue'),
+    },
+    {
       path: '/desktop/login',
       name: 'login',
       component: () => import('@/desktop/pages/login.vue'),
