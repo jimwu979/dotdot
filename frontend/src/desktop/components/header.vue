@@ -39,10 +39,10 @@
       </router-link>
     </nav>
     <section>
-      <b>歐</b>
+      <b>{{ userStore.initial }}</b>
       <div>
-        <h3>歐巴馬</h3>
-        <p>obam@gmail.com</p>
+        <h3>{{ userStore.name }}</h3>
+        <p>{{ userStore.email }}</p>
       </div>
     </section>
   </header>
@@ -51,8 +51,10 @@
 <script setup lang="ts">
 import { BookOpenText, ChartPie, Landmark, Settings } from '@lucide/vue'
 import { useRoute } from 'vue-router'
+import { useUserStore } from '@/shared/stores/user'
 
 const route = useRoute()
+const userStore = useUserStore()
 const now = new Date()
 const currentMonthRoute = {
   name: 'index',
@@ -67,8 +69,11 @@ const currentMonthRoute = {
   .component.header{
     flex: 0 0 220px;
     gap: 24px;
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
     height: 100dvh;
-    padding: 24px 16px 16px;
+    padding: 24px 12px 16px;
     background-color: $yellow;
     box-shadow: 4px 0 20px rgba(73,62,28,.12);
     @include flexbox(column, flex-start, stretch);
@@ -115,8 +120,10 @@ const currentMonthRoute = {
       }
     }
     >section{
-      gap: 10px;
-      padding: 12px;
+      gap: 6px;
+      padding: 6px;
+      min-width: 0;
+      overflow: hidden;
       min-height: 72px;
       margin-top: auto;
       border: 1px solid $oat;
@@ -144,6 +151,7 @@ const currentMonthRoute = {
           font-weight: 600;
         }
         >p{
+          width: 100%;
           color: $grey;
           font-size: 12px;
           overflow: hidden;

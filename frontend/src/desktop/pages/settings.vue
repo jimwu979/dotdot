@@ -49,6 +49,7 @@ import SettingsEditorPanel, {
 import SettingsPanel, {
   type SettingsView,
 } from '@/desktop/components/settings/SettingsPanel.vue'
+import { useUserStore } from '@/shared/stores/user'
 
 interface SettingItem {
   label: string
@@ -59,12 +60,13 @@ interface SettingItem {
 
 const route = useRoute()
 const router = useRouter()
-const settingGroups: { title: string, items: SettingItem[] }[] = [
+const userStore = useUserStore()
+const settingGroups = computed<{ title: string, items: SettingItem[] }[]>(() => [
   {
     title: '帳號',
     items: [
-      { label: '姓名', value: '歐巴馬', view: 'name', query: { view: 'name' } },
-      { label: 'Email', value: 'obam@gmail.com', view: 'email', query: { view: 'email' } },
+      { label: '姓名', value: userStore.name, view: 'name', query: { view: 'name' } },
+      { label: 'Email', value: userStore.email, view: 'email', query: { view: 'email' } },
       { label: '重設密碼', view: 'password', query: { view: 'password' } },
       { label: '登出', view: 'logout', query: { view: 'logout' } },
     ],
@@ -83,7 +85,7 @@ const settingGroups: { title: string, items: SettingItem[] }[] = [
       { label: '支出', view: 'expense', query: { isExpense: 'true' } },
     ],
   },
-]
+])
 
 const selectedView = computed<SettingsView>(() => {
   if (route.query.isExpense === 'false') return 'income'

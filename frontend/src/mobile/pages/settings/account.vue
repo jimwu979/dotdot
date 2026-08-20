@@ -64,11 +64,13 @@ import { reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from '@/mobile/components/AppHeader.vue'
 import Breadcrumb from '@/mobile/components/Breadcrumb.vue'
+import { useUserStore } from '@/shared/stores/user'
 
 const route           = useRoute()
+const userStore       = useUserStore()
 
-const name            = ref('')    // 姓名
-const email           = ref('')    // Email
+const name            = ref(userStore.name)  // 姓名
+const email           = ref(userStore.email) // Email
 const oldPassword     = ref('')    // 舊密碼
 const newPassword     = ref('')    // 新密碼
 const confirmPassword = ref('')    // 確認密碼
@@ -93,12 +95,14 @@ const submit = () => {
     case 'name':
       errors.nameEmpty = !name.value
       if (errors.nameEmpty) return
+      userStore.updateName(name.value)
       break
 
     case 'email':
       errors.emailEmpty = !email.value
       errors.emailInvalid = Boolean(email.value) && !emailPattern.test(email.value)
       if (errors.emailEmpty || errors.emailInvalid) return
+      userStore.updateEmail(email.value)
       break
 
     case 'password':

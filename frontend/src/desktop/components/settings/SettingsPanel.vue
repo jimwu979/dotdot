@@ -162,6 +162,7 @@ import { categoryIcons } from '@/shared/icons/category'
 import { useAutomaticStore, type AutomaticItem } from '@/shared/stores/automatic'
 import { useCategoryStore, type Category } from '@/shared/stores/category'
 import { useDotdotStore, type DotdotItem } from '@/shared/stores/dotdot'
+import { useUserStore } from '@/shared/stores/user'
 import type { SettingsEditorTarget } from '@/desktop/components/settings/SettingsEditorPanel.vue'
 
 export type SettingsView = 'name' | 'email' | 'password' | 'logout' | 'dotdot' | 'automatic' | 'income' | 'expense' | ''
@@ -181,8 +182,9 @@ const router = useRouter()
 const categoryStore = useCategoryStore()
 const dotdotStore = useDotdotStore()
 const automaticStore = useAutomaticStore()
+const userStore = useUserStore()
 const accountMessage = ref('')
-const accountValues = reactive<Record<AccountField['key'], string>>({ name: '歐巴馬', oldEmail: 'obam@gmail.com', newEmail: '', emailPassword: '', oldPassword: '', newPassword: '' })
+const accountValues = reactive<Record<AccountField['key'], string>>({ name: userStore.name, oldEmail: userStore.email, newEmail: '', emailPassword: '', oldPassword: '', newPassword: '' })
 const accountErrors = reactive<Record<AccountField['key'], string>>({ name: '', oldEmail: '', newEmail: '', emailPassword: '', oldPassword: '', newPassword: '' })
 const draggedId = ref<number>()
 const dragKind = ref<DragKind>()
@@ -270,6 +272,13 @@ const saveAccount = () => {
     if (!accountValues.oldPassword) accountErrors.oldPassword = '此欄位不得空白'
     if (!accountValues.newPassword) accountErrors.newPassword = '此欄位不得空白'
     if (accountErrors.oldPassword || accountErrors.newPassword) return
+  }
+  if (props.view === 'name') userStore.updateName(accountValues.name)
+  if (props.view === 'email') {
+    userStore.updateEmail(accountValues.newEmail)
+    accountValues.oldEmail = userStore.email
+    accountValues.newEmail = ''
+    accountValues.emailPassword = ''
   }
   // 前端欄位驗證通過後，Email 與密碼正確性由帳號 API 驗證。
   accountMessage.value = '已儲存變更'
