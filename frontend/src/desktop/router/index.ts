@@ -38,7 +38,27 @@ export default createRouter({
     {
       path: '/desktop/login',
       name: 'login',
-      component: () => import('@/desktop/pages/login.vue'),
+      component: () => import('@/desktop/pages/login/index.vue'),
+    },
+    {
+      path: '/desktop/register',
+      name: 'register',
+      component: () => import('@/desktop/pages/login/register.vue'),
+    },
+    {
+      path: '/desktop/register-complete',
+      name: 'register-complete',
+      component: () => import('@/desktop/pages/login/register-complete.vue'),
+    },
+    {
+      path: '/desktop/forgot-password',
+      name: 'forgot-password',
+      component: () => import('@/desktop/pages/login/forgot-password.vue'),
+    },
+    {
+      path: '/desktop/reset-password',
+      name: 'reset-password',
+      component: () => import('@/desktop/pages/login/reset-password.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
