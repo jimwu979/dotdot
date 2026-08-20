@@ -35,6 +35,10 @@
               <b>{{ getCategory(item.categoryId)?.name }}</b>
               <ChevronDown />
             </button>
+            <b v-for="tag in getVisibleTags(item)" :key="tag.id" class="tag">
+              {{ tag.name }}
+            </b>
+            <b v-if="getSelectedTags(item).length > 3" class="tag">...</b>
             <input v-model="item.note" type="text" placeholder="備註" aria-label="備註" />
             <input
               v-model.number="item.amount"
@@ -63,7 +67,7 @@
         </button>
       </article>
       <button class="addCard btn-click-effect" type="button" @click="addCard">
-        <Plus />新增卡片
+        <Plus />新增日期
       </button>
       </div>
       <button class="save btn-click-effect" type="button" @click="saveRecords">儲存</button>
@@ -91,8 +95,26 @@
           <b>{{ getCategory(dragPreviewItem.categoryId)?.name }}</b>
           <ChevronDown />
         </div>
-        <div class="note">{{ dragPreviewItem.note || '備註' }}</div>
-        <div class="amount">{{ dragPreviewItem.amount || '金額' }}</div>
+        <b v-for="tag in getVisibleTags(dragPreviewItem)" :key="tag.id" class="tag">
+          {{ tag.name }}
+        </b>
+        <b v-if="getSelectedTags(dragPreviewItem).length > 3" class="tag">...</b>
+        <input
+          class="note"
+          type="text"
+          :value="dragPreviewItem.note"
+          placeholder="備註"
+          readonly
+          tabindex="-1"
+        />
+        <input
+          class="amount"
+          type="text"
+          :value="dragPreviewItem.amount"
+          placeholder="金額"
+          readonly
+          tabindex="-1"
+        />
         <span><Trash2 /></span>
         <span><GripVertical /></span>
       </div>
@@ -106,6 +128,7 @@
     <CategoryModal
       :open="categoryPickerTarget !== null"
       :selected-category-id="selectedCategoryItem?.categoryId ?? getDefaultCategoryId()"
+      :selected-tag-ids="selectedCategoryItem?.tagIds ?? []"
       @cancel="categoryPickerTarget = null"
       @confirm="confirmCategory"
     />
@@ -147,6 +170,7 @@ import { useRecordStore } from '@/shared/stores/record'
 interface BatchItem {
   id: number
   categoryId: number
+  tagIds: number[]
   note: string
   amount: number | ''
 }
@@ -190,13 +214,14 @@ const getDefaultCategoryId = () => (
 const createItem = (): BatchItem => ({
   id: nextItemId++,
   categoryId: getDefaultCategoryId(),
+  tagIds: [],
   note: '',
   amount: '',
 })
 const createCard = (): BatchCard => ({
   id: nextCardId++,
   occurredAt: getCurrentDate(),
-  items: Array.from({ length: 3 }, createItem),
+  items: [createItem()],
 })
 const cards = ref<BatchCard[]>([createCard()])
 const datePickerCardId = ref<number | null>(null)
@@ -235,6 +260,12 @@ const formatDisplayDate = (date: string) => date.replaceAll('-', '/')
 const getCategory = (categoryId: number) => (
   categoryStore.categoryList.find(category => category.id === categoryId)
 )
+const getSelectedTags = (item: BatchItem) => (
+  getCategory(item.categoryId)?.tags
+    .filter(tag => item.tagIds.includes(tag.id))
+    .sort((tagA, tagB) => tagA.index - tagB.index) ?? []
+)
+const getVisibleTags = (item: BatchItem) => getSelectedTags(item).slice(0, 3)
 const isValidAmount = (amount: number | '') => (
   typeof amount === 'number' && Number.isInteger(amount) && amount > 0
 )
@@ -256,8 +287,11 @@ const deleteCard = (cardId: number) => {
 const openCategoryPicker = (cardId: number, itemId: number) => {
   categoryPickerTarget.value = { cardId, itemId }
 }
-const confirmCategory = (categoryId: number) => {
-  if (selectedCategoryItem.value) selectedCategoryItem.value.categoryId = categoryId
+const confirmCategory = (categoryId: number, tagIds: number[]) => {
+  if (selectedCategoryItem.value) {
+    selectedCategoryItem.value.categoryId = categoryId
+    selectedCategoryItem.value.tagIds = [...tagIds]
+  }
 
   categoryPickerTarget.value = null
 }
@@ -424,7 +458,7 @@ const saveRecords = () => {
 
   records.forEach(record => recordStore.addRecord({
     categoryId: record.categoryId,
-    tagIds: [],
+    tagIds: [...record.tagIds],
     note: record.note,
     amount: Number(record.amount),
     isAutomatic: false,
@@ -446,7 +480,7 @@ const saveRecords = () => {
     @include flexbox(column, flex-start, stretch);
     >.scroll-area{
       flex: 1;
-      padding: 16px 18px;
+      padding: 16px 12px;
       min-height: 0;
       overflow-y: auto;
       scrollbar-width: none;
@@ -461,10 +495,10 @@ const saveRecords = () => {
       min-height: calc(100% - 62px);
       @include flexbox(column, flex-start, stretch);
       >article{
-        padding: 12px;
-        border-radius: 16px;
-        border: 1px solid $oat;
-        background-color: $white;
+        padding: 12px 0;
+        &+article{
+          border-top: 1px solid $oat;
+        }
         >header{
           display: grid;
           align-items: center;
@@ -497,13 +531,13 @@ const saveRecords = () => {
           }
         }
         >ul{
-          gap: 7px;
           user-select: none;
           -webkit-user-select: none;
           -webkit-touch-callout: none;
           @include flexbox(column, flex-start, stretch);
           >li{
             gap: 5px;
+            padding: 6px 12px;
             transition: opacity .2s, transform .2s;
             @include flexbox(row, flex-start, center);
             &.drag-placeholder{
@@ -537,6 +571,7 @@ const saveRecords = () => {
               gap: 5px;
               width: 108px;
               height: 38px;
+              flex: 0 0 108px;
               min-width: 0;
               padding: 0 6px;
               border-radius: 8px;
@@ -568,11 +603,23 @@ const saveRecords = () => {
                 flex: 0 0 13px;
               }
             }
+            >.tag{
+              color: $mustard;
+              padding: 2px 4px;
+              flex: 0 0 auto;
+              font-size: 11px;
+              line-height: 16px;
+              white-space: nowrap;
+              border-radius: 4px;
+              border: 1px solid $mustard;
+              background-color: $background;
+            }
             >input:first-of-type{
               flex: 1;
             }
             >input:last-of-type{
               width: 70px;
+              flex: 0 0 70px;
               text-align: right;
             }
             >.deleteItem,
@@ -647,11 +694,13 @@ const saveRecords = () => {
   .batch-item-drag-preview{
     z-index: 50;
     gap: 5px;
-    height: 38px;
+    height: 50px;
+    padding: 6px 12px;
     position: fixed;
     border-radius: 8px;
     pointer-events: none;
     transform: scale(1.025);
+    animation: batch-item-drag-enter .2s ease;
     background-color: $white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
     @include flexbox(row, flex-start, center);
@@ -698,6 +747,17 @@ const saveRecords = () => {
         flex: 0 0 13px;
       }
     }
+    >.tag{
+      color: $mustard;
+      padding: 2px 4px;
+      flex: 0 0 auto;
+      font-size: 11px;
+      line-height: 16px;
+      white-space: nowrap;
+      border-radius: 4px;
+      border: 1px solid $mustard;
+      background-color: $background;
+    }
     >.note,
     >.amount{
       height: 38px;
@@ -709,7 +769,6 @@ const saveRecords = () => {
       text-overflow: ellipsis;
       border: 1px solid $oat;
       background-color: $background;
-      @include flexbox(row, flex-start, center);
     }
     >.note{
       flex: 1;
@@ -717,6 +776,7 @@ const saveRecords = () => {
     >.amount{
       width: 70px;
       flex: 0 0 70px;
+      text-align: right;
     }
     >span{
       width: 28px;
@@ -729,6 +789,16 @@ const saveRecords = () => {
       &:last-child{
         color: $grey;
       }
+    }
+  }
+  @keyframes batch-item-drag-enter{
+    from{
+      opacity: 0;
+      transform: scale(1);
+    }
+    to{
+      opacity: 1;
+      transform: scale(1.025);
     }
   }
 </style>

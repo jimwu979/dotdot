@@ -2,32 +2,54 @@
   <div class="component category-modal" :class="{ open }" @click.self="emit('cancel')">
     <div class="content">
       <CategoryPicker v-model="draftCategoryId" />
+      <SettingsTagSelector
+        v-model:selected-tag-ids="draftTagIds"
+        :tags="availableTags"
+      />
       <div class="actions">
         <button class="cancel btn-click-effect" type="button" @click="emit('cancel')">取消</button>
-        <button class="confirm btn-click-effect" type="button" @click="emit('confirm', draftCategoryId)">確定</button>
+        <button class="confirm btn-click-effect" type="button" @click="emit('confirm', draftCategoryId, draftTagIds)">確定</button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CategoryPicker from '@/desktop/components/index/aside/panel/CategoryPicker.vue'
+import SettingsTagSelector from '@/desktop/components/settings/SettingsTagSelector.vue'
+import { useCategoryStore } from '@/shared/stores/category'
 
 const props = defineProps<{
   open: boolean
   selectedCategoryId: number
+  selectedTagIds: number[]
 }>()
 
 const emit = defineEmits<{
   cancel: []
-  confirm: [categoryId: number]
+  confirm: [categoryId: number, tagIds: number[]]
 }>()
 
+const categoryStore = useCategoryStore()
 const draftCategoryId = ref(props.selectedCategoryId)
+const draftTagIds = ref<number[]>([])
+const availableTags = computed(() => (
+  categoryStore.categoryList
+    .find(category => category.id === draftCategoryId.value)
+    ?.tags.slice()
+    .sort((tagA, tagB) => tagA.index - tagB.index) ?? []
+))
+
+watch(draftCategoryId, () => {
+  draftTagIds.value = []
+}, { flush: 'sync' })
 
 watch(() => props.open, (open) => {
-  if (open) draftCategoryId.value = props.selectedCategoryId
+  if (!open) return
+
+  draftCategoryId.value = props.selectedCategoryId
+  draftTagIds.value = [...props.selectedTagIds]
 })
 </script>
 
@@ -60,6 +82,9 @@ watch(() => props.open, (open) => {
       transform: scale(.94);
       background-color: $background;
       transition: opacity .2s, transform .2s;
+      >.settings-tag-selector{
+        margin-top: 18px;
+      }
       >.actions{
         gap: 10px;
         margin-top: 18px;
