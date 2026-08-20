@@ -224,7 +224,7 @@ watch(
       height: 100%;
       padding: 12px;
       overflow: hidden;
-      flex: 0 0 420px;
+      flex: 0 0 480px;
       min-height: 100vh;
       border-left: 1px solid $oat;
       background-color: $white;

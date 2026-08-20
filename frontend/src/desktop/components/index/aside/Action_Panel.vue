@@ -46,8 +46,8 @@ const panelTitle = computed(() => ({
   .component.action-panel{
     top: 0;
     z-index: 3;
-    right: -420px;
-    width: 420px;
+    right: -480px;
+    width: 480px;
     height: 100%;
     position: absolute;
     transition: transform .3s ease;
@@ -56,7 +56,7 @@ const panelTitle = computed(() => ({
     box-shadow: -16px 0 36px rgba($black,.12);
     @include flexbox(column, flex-start, stretch);
     &.open{
-      transform: translateX(-420px);
+      transform: translateX(-480px);
     }
     >header{
       height: 62px;
