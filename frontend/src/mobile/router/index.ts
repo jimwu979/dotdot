@@ -123,7 +123,8 @@ export default createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: getCurrentMonthPath,
+      name: 'not-found',
+      component: () => import('@/mobile/pages/404.vue'),
     },
   ],
 })

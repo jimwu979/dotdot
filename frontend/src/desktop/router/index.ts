@@ -62,7 +62,8 @@ export default createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: getCurrentMonthPath,
+      name: 'not-found',
+      component: () => import('@/desktop/pages/404.vue'),
     },
   ],
 })
